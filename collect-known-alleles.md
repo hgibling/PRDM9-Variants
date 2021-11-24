@@ -72,7 +72,7 @@ Allele znf content:
 # remove extra columns, convert znf names to lowercase, tidy file, and sort alphabetically
 awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2011-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2011-allele-content.tsv
 
-# check that allelels are identical to those from Berg 2010
+# check that allele contents are identical to those from Berg 2010
 diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/berg-2011-allele-content.tsv
 
 # 29a30,32
@@ -161,3 +161,37 @@ Allele DNA sequences:
 - Parse sequences from NCBI accessions instead
 
 #
+
+## Publications describing Allele znf content
+
+
+### Ponting May 2011
+### What are the genomic drivers of the rapid evolution of _PRDM9_?
+**PMID: 21388701**\
+**GenBank Accession Numbers: None**
+
+Allele znf content:
+- Includes alleles A-L24
+- Review paper
+- Image in **Figure 4** depicts znf content as named blocks
+  - Figure cites Berg et al. 2010 for allele znf content
+  - However, allele znf content for L24 **does not** match that for Berg et al. 2010
+  - Via email communication with Ponting (Aug 2021), confirmed that L24 znf content depicted in Figure 4 is **incorrect**
+- Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Ponting-2010-allele-content.txt`
+  - Included gaps, represented with `_`
+- Final file: `intermediate-files/Ponting-2011-allele-content.tsv`
+```
+# remove gaps and sort alphabetically
+sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2010-allele-copy.txt | cut -f1,2 | sort -k1,1V > intermediate-files/ponting-2010-allele-content.tsv
+
+# check that allele contents are identical to those from Berg 2010, the reference for the image content
+diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-2011-allele-content.tsv
+
+# 29c29
+# < L24   abcddecftpfqj
+# ---
+# > L24   abcddecfthpfqj
+
+# IMPORTANT: content for L24 in Ponting 2011 has an h znf not present in Berg 2010
+```
+
