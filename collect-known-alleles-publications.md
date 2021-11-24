@@ -159,10 +159,26 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 Allele znf content:
 - Includes alleles A-F, H-I, K
 - Image in **Figure 2b** depicts znf content as unnamed blocks
+  - Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Baudat-2010-allele-copy.txt`
+    - Named blocks by four-character code in figure legend (orange = `NTOR`; grey = `NTGR`), with `|` to separate blocks
   - Compare colored blocks to znf content in alleles A-E from Berg et al. 2010 to deduce which block color corresponds to which znf
   - Compare znf DNA sequences from inferred colored blocks to allele DNA sequences provided
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png?raw=true" width="600">
+```
+# tidy file
+awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-content-unnamed.tsv
+
+# print znf content for alleles A-E from Berg 2010
+egrep "[ABCDE]" intermediate-files/berg-2010-allele-content.tsv 
+
+# A       abcddecfghfij
+# B       abcddccfghfij
+# C       abcddccfkhlhij
+# D       abcddecfkghfij
+# E       abcdhfij
+
+```
 
 Allele DNA sequences:
 - Includes alleles A-F, H-I
