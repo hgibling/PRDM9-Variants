@@ -1,8 +1,17 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
 Literature searches revealed several publications that describe one or more of the following:
-- Znf DNA sequences
-- Allele znf content
-- Allele DNA sequences
+- **Znf DNA sequences**
+  - Berg 2010
+  - Berg 2011
+  - Hussin 2013
+- **Allele znf content**
+  - Berg 2010
+  - Baudat 2010
+  - Berg 2011
+  - Ponting 2011
+  - Hussin 2013
+- **Allele DNA sequences**
+  - Baudat 2010
 
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
