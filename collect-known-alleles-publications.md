@@ -1,4 +1,4 @@
-# Collecting known _PRDM9_ alleles and associated zinc fingers (znfs)
+# Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
 Literature searches revealed several publications that describe one or more of the following:
 - Znf DNA sequences
 - Allele znf content
