@@ -153,6 +153,8 @@ Allele znf content:
   - Compare colored blocks to znf content in alleles A-E from Berg et al. 2010 to deduce which block color corresponds to which znf
   - Compare znf DNA sequences from inferred colored blocks to allele DNA sequences provided
 
+<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png" width="600">
+
 Allele DNA sequences:
 - Includes alleles A-F, H-I
 - Sequences are fasta screenshots in **Supplementary Figure S3B** instead of copy/pastable text (!)
