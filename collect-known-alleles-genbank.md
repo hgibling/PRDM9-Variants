@@ -13,6 +13,15 @@ Outline of collection process:
 Search GenBank for _PRDM9_ nucleotide sequences
 - Search in the [NCBI Nucleotide database](https://www.ncbi.nlm.nih.gov/nucleotide/):
     - `(PRDM9) AND "Homo sapiens"[porgn:__txid9606] NOT "patch" NOT "scaffold" NOT "assembly" NOT "chain" NOT "ZCWPW1"`
-    - 128 entries (as of 2021-11-23)
+    - 128 entries (as of 2021-11-24)
 - Save results:
-    - _Send to: > Coding Sequences > FASTA Nucleotide > Create File_
+    - _Send to: > Complete Record > Choose Destination: File > Format: FASTA > Sort by: Accession > Create File_ and save as `genbank-records/genbank-PRDM9-complete-record_2021-11-24.fa`
+- Tidy file
+```
+# remove blank lines, collapse sequences to single lines
+sed '/>/ s/$/NEWLINE/' genbank-records/genbank-PRDM9-complete-record_2021-11-24.fa | tr -d '\n' | sed 's/>/\n>/g' | sed 's/NEWLINE/\n/' > genbank-records/genbank-PRDM9-complete-record-oneline_2021-11-24.fa
+
+# remove non-znf sequences
+
+
+```
