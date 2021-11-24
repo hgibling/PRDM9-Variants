@@ -153,7 +153,7 @@ Allele znf content:
   - Compare colored blocks to znf content in alleles A-E from Berg et al. 2010 to deduce which block color corresponds to which znf
   - Compare znf DNA sequences from inferred colored blocks to allele DNA sequences provided
 
-<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png" width="600">
+<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png?raw=true" width="600">
 
 Allele DNA sequences:
 - Includes alleles A-F, H-I
@@ -195,3 +195,4 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-
 # IMPORTANT: content for L24 in Ponting 2011 has an h znf not present in Berg 2010
 ```
 
+<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Ponting-2011-Figure3.jpg?raw=true" width="500">
