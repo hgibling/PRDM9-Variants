@@ -10,7 +10,8 @@ Literature searches revealed several publications that describe one or more of t
 
 ### Berg et al. Oct 2010
 ### _PRDM9_ variation strongly influences recombination hot-spot activity and meiotic instability in humans
-**PMID: 20818382**
+**PMID: 20818382**\
+**GenBank Accession Numbers: HM210983.1 – HM211006.1**
 
 Znf sequences:
 - Copy/pasted from **Supplementary Figure 1a** to `berg-2010-znf-copy.txt`
@@ -35,7 +36,9 @@ awk '{print $1 "\t" tolower($3)}' intermediate-files/berg-2010-allele-copy.txt |
 
 ### Berg et al. Jul 2011
 ### Variants of the protein _PRDM9_ differentially regulate a set of human meiotic recombination hotspots highly active in African populations
-**PMID: 21750151**
+**PMID: 21750151**\
+**GenBank Accession Numbers: None**
+
 
 Znf sequences
 - Copy/pasted from **Supplementary Figure 1A** to `berg-2011-znf-copy.txt`
@@ -55,7 +58,7 @@ diff berg-2010-znf-sequences.tsv berg-2011-znf-sequences.tsv
 # > u     TGTGGGCGGGGCTTTAGCGATAAGTCACACCTCCTCAGACACCAGAGGACACACACAGGGGAGAAGCCCTATGTCTGCAGGGAG
 # > v     TGTGGGCGGGGCTTTAGCTGGCAGTCAGTCCTCCTCAGTCACCAGAGGACACACACAGGGAAGAAGCCCTATGTCTGCAGGGAG
 
-# znfs m-n are missing, znfs u-v added, in berg-2011-znf-sequences.tsv
+# znfs m-n are missing, znfs u-v new to berg-2011-znf-sequences.tsv
 ```
 
 Allele znf content:
@@ -75,14 +78,15 @@ diff berg-2010-allele-content.tsv berg-2011-allele-content.tsv
 # > L26   abcddecfghfqj
 # > L27   abcddvcfghfij
 
-# alleles L25-L27 added in berg-2011-allele-content.tsv
+# alleles L25-L27 new to berg-2011-allele-content.tsv
 ```
 
 #
 
 ### Hussin et al. Mar 2013
 ### Rare allelic forms of _PRDM9_ associated with childhood leukemogenesis
-**PMID: 23222848**
+**PMID: 23222848**\
+**GenBank Accession Numbers: JQ044371 – JQ044377**
 
 Znf sequences
 - Copy/pasted from **Supplementary Figure S6** to `hussin-2013-znf-copy.txt`
@@ -138,15 +142,14 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' intermediate-files/hussin-2013-allele-copy.t
 
 ### Baudat et al. Feb 2010
 ### _PRDM9_ is a major determinant of meiotic recombination hotspots in humans and mice
-**PMID: 20044539**
+**PMID: 20044539**\
+**GenBank Accession Numbers: GU216222.1 - GU216229.1**
 
 Allele znf content:
 - Includes alleles A-F, H-I, K
 - Image in **Figure 2b** depicts znf content as unnamed blocks
   - Compare colored blocks to znf content in alleles A-E from Berg et al. 2010 to deduce which block color corresponds to which znf
   - Compare znf DNA sequences from inferred colored blocks to allele DNA sequences provided
-
-
 
 Allele DNA sequences:
 - Includes alleles A-F, H-I
