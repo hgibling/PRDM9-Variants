@@ -1,17 +1,19 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
-Literature searches revealed several publications that describe one or more of the following:
-- **Znf DNA sequences**
-  - [Berg 2010](#berg-et-al-oct-2010)
-  - Berg 2011
-  - Hussin 2013
-- **Allele znf content**
-  - Berg 2010
-  - Baudat 2010
-  - Berg 2011
-  - Ponting 2011
-  - Hussin 2013
-- **Allele DNA sequences**
-  - Baudat 2010
+Literature searches revealed several publications that describe znf DNA sequences, allele znf content, and/or allele DNA sequences:
+- [Baudat 2010](#baudat-et-al-feb-2010)
+  - Allele znf content
+  - Allele DNA sequences
+- [Berg 2010](#berg-et-al-oct-2010)
+  - Znf DNA sequences
+  - Allele znf content
+- [Ponting 2011](#ponting-may-2011)
+  - Allele znf content
+- [Berg 2011](#berg-et-al-jul-2011)
+  - Znf DNA sequences
+  - Allele znf content
+- [Hussin 2013](#hussin-et-al-mar-2013)
+  - Znf DNA sequences
+  - Allele znf content
 
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
@@ -221,10 +223,6 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Ponting-2011-Figure3.jpg?raw=true" width="500">
 
 ---
-
-
-## Test
-test
 
 ## Compile known znf sequences and allele znf content
 
