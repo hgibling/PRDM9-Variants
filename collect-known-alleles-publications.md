@@ -27,7 +27,7 @@ Two steps completed:
 ### Berg et al. Oct 2010
 ### _PRDM9_ variation strongly influences recombination hot-spot activity and meiotic instability in humans
 **PMID: [20818382](https://pubmed.ncbi.nlm.nih.gov/20818382)**\
-**GenBank Accession Numbers: HM210983.1 – HM211006.1**
+**GenBank Accession Numbers: [HM210983.1 – HM211006.1](https://ncbi.nlm.nih.gov/nuccore/?term=HM210983.1%3AHM211006.1%5Baccn%5D)**
 
 Znf DNA sequences:
 - Includes znfs a-t
@@ -102,7 +102,7 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/berg-201
 ### Hussin et al. Mar 2013
 ### Rare allelic forms of _PRDM9_ associated with childhood leukemogenesis
 **PMID: [23222848](https://pubmed.ncbi.nlm.nih.gov/23222848)**\
-**GenBank Accession Numbers: JQ044371 – JQ044377**
+**GenBank Accession Numbers: [JQ044371 – JQ044377](https://ncbi.nlm.nih.gov/nuccore/?term=JQ044371.1%3AJQ044377.1%5Baccn%5D)**
 
 Znf DNA sequences
 - Includes previously described znfs a-t, plus newly described znfs u-w
@@ -156,7 +156,7 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 ### Baudat et al. Feb 2010
 ### _PRDM9_ is a major determinant of meiotic recombination hotspots in humans and mice
 **PMID: [20044539](https://pubmed.ncbi.nlm.nih.gov/20044539)**\
-**GenBank Accession Numbers: GU216222.1 - GU216229.1**
+**GenBank Accession Numbers: [GU216222.1 - GU216229.1](https://ncbi.nlm.nih.gov/nuccore/?term=GU216222.1%3AGU216229.1%5Baccn%5D)**
 
 Allele znf content:
 - Includes alleles A-E described in Berg et al. 2010, plus alleles F, H-I, and K
