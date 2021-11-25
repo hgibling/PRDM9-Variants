@@ -3,6 +3,8 @@ Literature searches revealed several publications that describe znf DNA sequence
 - [Oliver 2009](#oliver-et-al-dec-2009)
   - Znf DNA sequences
   - Allele DNA sequence accession numbers
+- [Parvanov 2010](#parvanov-et-al-feb-2010)
+  - Allele DNA sequence accession numbers
 - [Baudat 2010](#baudat-et-al-feb-2010)
   - Allele znf content
   - Allele DNA sequence accession numbers
@@ -59,6 +61,24 @@ Allele DNA sequence accession numbers:
 for i in $(seq 899863 899912)
 do
 echo "FJ$i.1" >> genbank-records/oliver-2009-allele-sequence-accessions.txt
+done
+```
+
+#
+
+### Parvanov et al. Feb 2010
+### _PRDM9_ controls activation of mammalian recombination hotspots
+**PMID: [20044538](https://pubmed.ncbi.nlm.nih.gov/20044538)**\
+**GenBank Accession Numbers: [GU183914.1 - GU183919.1](https://ncbi.nlm.nih.gov/nuccore/?term=GU216222.1%3AGU216229.1%5Baccn%5D)**
+
+Allele DNA sequence accession numbers:
+- Accession numbers listed on **Supplementary Material page 3: Material and Methods, Gene Bank Numbers** include from GU183909-GU183919, but only GU183914-GU183919 are human (the others are mouse)
+- Save accession numbers to: `genbank-records/parvanov-2010-allele-sequence-accessions.txt`
+```
+# generate sequence of numbers representing genbank accession numbers
+for i in $(seq 183914 183919)
+do
+echo "GU$i.1" >> genbank-records/parvanov-2010-allele-sequence-accessions.txt
 done
 ```
 
