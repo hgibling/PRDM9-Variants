@@ -1,5 +1,5 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
-Literature searches revealed several publications that describe znf DNA sequences, allele znf content, and/or allele DNA sequences:
+Literature searches revealed several publications that describe znf DNA sequences, allele znf content, allele DNA sequences, and/or allele mutations:
 - [Baudat 2010](#baudat-et-al-feb-2010)
   - Allele znf content
   - Allele DNA sequences
@@ -17,12 +17,14 @@ Literature searches revealed several publications that describe znf DNA sequence
 - [Hussin 2013](#hussin-et-al-mar-2013)
   - Znf DNA sequences
   - Allele znf content
+- [Wang 2021](#wang-et-al-jul-2021)
+  - Allele mutations
 
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
 Analysis steps:
 1. [Get allele and znf sequence data from publications](#1-get-allele-and-znf-sequence-data-from-publications)
-2.  [Check if allele content and znf sequences are unique](#2-check-if-allele-content-and-znf-sequences-are-unique)
+2. [Check if allele content and znf sequences are unique](#2-check-if-allele-content-and-znf-sequences-are-unique)
 3. [Compile known znf sequences and allele znf content](#3-compile-known-znf-sequences-and-allele-znf-content)
 
 ---
@@ -39,9 +41,9 @@ Allele znf content:
 - Image in **Figure 2b** depicts znf content as unnamed blocks
   - Appears one block (`-NHR` in the legend) represents more than one znf as it appears in positions 11 & 12 in alleles A and B
   - Additionally, tne block in alleles F and K (`--HR`) and one block in allele H (`-RVS`)that are not also present in A-E
-  - Nevertheless, Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/baudat-2010-allele-copy.txt`
-    - Named blocks by four-character code in figure legend (orange = `NTOR`; grey = `NTGR`), with `|` to separate blocks
-  - Tidy file: `intermediate-files/baudat-2010-allele-copy.txt`
+- Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/baudat-2010-allele-copy.txt`
+  - Name blocks by four-character code in figure legend (orange = `NTOR`; grey = `NTGR`), with `|` to separate blocks
+- Tidy file: `intermediate-files/baudat-2010-allele-copy.txt`
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png?raw=true" width="600">
 
@@ -66,7 +68,7 @@ Allele DNA sequences:
 
 Znf DNA sequences:
 - Includes znfs a-t
-- Copy/pasted from **Supplementary Figure 1a** to `copy-paste-files/berg-2010-znf-copy.txt`
+- Copy/paste from **Supplementary Figure 1a** to: `copy-paste-files/berg-2010-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-znf-sequences.tsv`
 ```
 # convert znf names to lowercase and tidy file
@@ -75,7 +77,7 @@ sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2010-znf-c
 
 Allele znf content:
 - Includes alleles A-E, L1-L24
-- Copy/pasted from **Supplementary Figure 1b** to `copy-paste-files/berg-2010-allele-copy.txt`
+- Copy/paste from **Supplementary Figure 1b** to: `copy-paste-files/berg-2010-allele-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-allele-content.tsv`
 
 ```
@@ -95,8 +97,8 @@ Allele znf content:
 - Review paper
 - Image in **Figure 4** depicts znf content as named blocks
   - Cites Berg et al. 2010 for allele znf content
-- Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/ponting-2010-allele-content.txt`
-  - Included gaps represented with `_`
+- Type Znf content out by hand, triple check for accuracy, to: `copy-paste-files/ponting-2010-allele-content.txt`
+  - Include gaps represented with `_`
 - Tidy file: `intermediate-files/ponting-2011-allele-content.tsv`
 ```
 # remove gaps and sort alphabetically
@@ -115,7 +117,7 @@ sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2011-allele-copy.txt | c
 
 Znf DNA sequences
 - Includes znfs a-l, o-v
-- Copy/pasted from **Supplementary Figure 1A** to `copy-paste-files/berg-2011-znf-copy.txt`
+- Copy/paste from **Supplementary Figure 1A** to: `copy-paste-files/berg-2011-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2011-znf-sequences.tsv`
 ```
 # convert znf names to lowercase and tidy file
@@ -124,7 +126,7 @@ sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2011-znf-c
 
 Allele znf content:
 - Includes alleles A-E, L1-L27
-- Copy/pasted from **Supplementary Figure 1B** to `copy-paste-files/berg-2011-allele-copy.txt`
+- Copy/paste from **Supplementary Figure 1B** to: `copy-paste-files/berg-2011-allele-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-allele-content.tsv`
 
 ```
@@ -136,12 +138,12 @@ awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2011-allele-copy.txt | s
 
 ### Borel et al. May 2012
 ### Evaluation of _PRDM9_ variation as a risk factor for recurrent genomic disorders and chromosomal non-disjunction
-**PMID: [22643917](https://pubmed.ncbi.nlm.nih.gov/20818382)**\
+**PMID: [22643917](https://pubmed.ncbi.nlm.nih.gov/22643917)**\
 **GenBank Accession Numbers: None**
 
 Znf DNA sequences:
 - Includes znfs a-m, q
-- Copy/pasted from **Supplementary Figure 1a** to `copy-paste-files/borel-2012-znf-copy.txt`
+- Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-znf-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-znf-sequences.tsv`
 ```
 # convert znf names to lowercase and tidy file
@@ -150,7 +152,7 @@ sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/' copy-paste-files/borel-2012-znf-copy.txt >
 
 Allele znf content:
 - Includes alleles A-F, I, L1, L19, L28-L31
-- Copy/pasted from **Supplementary Figure 1b** to `copy-paste-files/borel-2012-allele-copy.txt`
+- Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-allele-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-allele-content.tsv`
 
 ```
@@ -167,7 +169,7 @@ awk '{print $1 "\t" tolower($3)}' copy-paste-files/borel-2012-allele-copy.txt > 
 
 Znf DNA sequences
 - Includes znfs a-x
-- Copy/pasted from **Supplementary Figure S6** to `copy-paste-files/hussin-2013-znf-copy.txt`
+- Copy/paste from **Supplementary Figure S6** to: `copy-paste-files/hussin-2013-znf-copy.txt`
 - Tidy file: `intermediate-files/hussin-2013-znf-sequences.tsv`
 ```
 # remove extra lines and tidy file
@@ -176,11 +178,48 @@ grep -v "Zinc" copy-paste-files/hussin-2013-znf-copy.txt | sed 's/\s/\t/' > inte
 
 Allele znf content
 - Includes alleles L32-L37
-- Copy/pasted from **Supplementary Material Page 7: Supplementary Results, Description of *PRDM9* Alleles and Novel ZnF Types** to `copy-paste-files/hussin-2013-allele-copy.txt`
+- Copy/paste from **Supplementary Material Page 7: Supplementary Results, Description of *PRDM9* Alleles and Novel ZnF Types** to `copy-paste-files/hussin-2013-allele-copy.txt`
 - Tidy file: `intermediate-files/hussin-2013-allele-sequences.tsv`
 ```
 # tidy file and sort alphabetically
 sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt | sort -k1,1V > intermediate-files/hussin-2013-allele-sequences.tsv
+```
+
+#
+
+### Wang et al. Jul 2021
+### Pathogenic variants of meiotic double strand break (DSB) formation genes _PRDM9_ and _ANKRD31_ in premature ovarian insufficiency
+**PMID: [34257419](https://pubmed.ncbi.nlm.nih.gov/34257419)**\
+**GenBank Accession Numbers: None**
+
+Allele mutations:
+- Includes point mutations c.229C>T:p.Arg77*, c.638T>G:p.Ile213Ser, c.677A>T:p.Lys226Met relative to allele B (NM_020227.3)
+- Copy/paste from **Table 1** to: `copy-paste-files/wang-2021-allele-mutations-copy.txt`
+  - Only copy/pasted from `Patient number` to `E2,pg/mL` for patients 1-4 due to merged cells in publication table
+- Tidy file: `intermediate-files/wang-2021-allele-mutations.tsv`
+```
+# remove extra columns, split position, reference and alternate alleles into separate columns, and sort alphabetically
+cut -f3 copy-paste-files/wang-2021-allele-mutations-copy.txt  | sed 's/\s//' | uniq | awk -F: '{print $0 "\t" substr($0, 3,3 ) "\t" substr($0, 6, 1) "\t" substr($0, 8, 1)}' > intermediate-files/wang-2021-allele-mutations.tsv
+```
+
+Reference allele:
+- Above point mutations relative to allele B ([NM_020227.3](https://ncbi.nlm.nih.gov/nucore/NM_020227.3))
+- Copy/paste NCBI fasta record to: `copy-paste-files/NM_020227.3-copy.txt`
+- Tidy file: `intermediate-files/NM_020227.3.fa`
+```
+# collapse reference sequence to single lines
+sed '/>/ s/$/NEWLINE/' copy-paste-files/NM_020227.3-copy.txt | tr -d '\n' | sed 's/>/\n>/g' | sed 's/NEWLINE/\n/' > intermediate-files/NM_020227.3.fa
+```
+
+Allele sequences:
+- Modify reference sequence to incorporate each allele mutation and save as allele sequence
+- Tidy file: `intermediate-files/wang-2021-allele-sequences.tsv`
+```
+# generate allele sequence based on point mutation data
+while read variant position ref alt
+do
+grep -v ">" intermediate-files/NM_020227.3.fa |  sed -e "s|\(.\{$position\}\).|\1$alt|" -e "s/^/$variant\t/" >> intermediate-files/wang-2021-allele-sequences.tsv
+done < intermediate-files/wang-2021-allele-mutations.tsv
 ```
 
 ---

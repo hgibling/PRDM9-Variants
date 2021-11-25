@@ -1,0 +1,4 @@
+Patient 1	Het	c.229C>T: p.Arg77*	Pathogenic	27	13	1.65	21.3	<0.085	40.64	<5.0
+Patient 2	Het	c.229C>T: p.Arg77*	Pathogenic	23	16	1.58	21.63	0.012	116.5	<5.0
+Patient 3	Het	c.677A>T: p.Lys226Met	Pathogenic	31	15	1.63	27.4	<0.060	99.09	NA
+Patient 4	Het	c.638T>G: p.Ile213Ser	Pathogenic	33	15	1.61	23.15	NA	76.62	60
