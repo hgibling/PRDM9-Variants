@@ -1,7 +1,7 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
 Literature searches revealed several publications that describe one or more of the following:
 - **Znf DNA sequences**
-  - Berg 2010
+  - [Berg 2010](#berg-et-al-oct-2010)
   - Berg 2011
   - Hussin 2013
 - **Allele znf content**
@@ -16,13 +16,13 @@ Literature searches revealed several publications that describe one or more of t
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
 Two steps completed:
-- Get allele and znf sequence data from publications
-- Compile known znf sequences and allele znf content
+- [Get allele and znf sequence data from publications](#-get-allele-and-znf-sequence-data-from-publications)
+- [Compile known znf sequences and allele znf content](#-compile-known-znf-sequences-and-allele-znf-content)
+
+[go here](#test)
 
 ---
-## Step 1: Get allele and znf sequence data from publications
-
-## Publications describing Znf DNA sequences & Allele znf content
+## Get allele and znf sequence data from publications
 
 ### Berg et al. Oct 2010
 ### _PRDM9_ variation strongly influences recombination hot-spot activity and meiotic instability in humans
@@ -153,9 +153,6 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 
 ---
 
-## Publications describing Allele znf content in alleles and Allele DNA sequences
-
-
 ### Baudat et al. Feb 2010
 ### _PRDM9_ is a major determinant of meiotic recombination hotspots in humans and mice
 **PMID: 20044539**\
@@ -193,9 +190,6 @@ Allele DNA sequences:
 
 ---
 
-## Publications describing Allele znf content
-
-
 ### Ponting May 2011
 ### What are the genomic drivers of the rapid evolution of _PRDM9_?
 **PMID: 21388701**\
@@ -230,7 +224,11 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-
 
 ---
 
-## Step 2: Compile known znf sequences and allele znf content
+
+## Test
+test
+
+## Compile known znf sequences and allele znf content
 
 Znf DNA sequences:
 - Combine Berg et al. 2010 and Berg et al. 2011, as the first contains znfs m & n and the second contains znfs u & v
