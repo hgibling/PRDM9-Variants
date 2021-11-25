@@ -9,7 +9,6 @@ Literature searches revealed several publications that describe znf DNA sequence
   - Znf DNA sequences
   - Allele znf content
   - Allele DNA sequence accession numbers
-
 - [Ponting 2011](#ponting-may-2011)
   - Allele znf content
 - [Berg 2011](#berg-et-al-jul-2011)
@@ -21,6 +20,7 @@ Literature searches revealed several publications that describe znf DNA sequence
 - [Hussin 2013](#hussin-et-al-mar-2013)
   - Znf DNA sequences
   - Allele znf content
+  - Allele DNA sequence accession numbers
 - [Wang 2021](#wang-et-al-jul-2021)
   - Allele mutations
 
