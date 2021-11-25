@@ -201,7 +201,7 @@ Allele znf content:
 - Review paper
 - Image in **Figure 4** depicts znf content as named blocks
   - Figure cites Berg et al. 2010 for allele znf content
-  - However, allele znf content for L24 **does not** match that for Berg et al. 2010
+  - However, znf content for allele L24 **does not** match that for Berg et al. 2010
   - Via email communication with Ponting (Aug 2021), confirmed that L24 znf content depicted in Figure 4 is **incorrect**
 - Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Ponting-2010-allele-content.txt`
   - Included gaps, represented with `_`
@@ -222,3 +222,33 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-
 ```
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Ponting-2011-Figure3.jpg?raw=true" width="500">
+
+---
+
+## Step 2: Compile known znf sequences and allele znf content
+
+Znf DNA sequences:
+- Combine Berg et al. 2010 and Berg et al. 2011, as the first contains znfs m & n and the second contains znfs u & v
+- Give Hussin et al. znfs u & v temporary names U & V, since they differ from Berg 2011 znfs u & v
+- Add Hussin et al znf sequences to the Berg sequences
+- Keep unique sequences
+```
+# combine lists of znf sequences
+cat intermediate-files/berg-2010-znf-sequences.tsv intermediate-files/berg-2011-znf-sequences.tsv <(sed -e 's/u/U/' -e 's/v/V/' intermediate-files/hussin-2013-znf-sequences.tsv) | sort -f | uniq > intermediate-files/publication-znf-sequences.tsv
+
+wc -l intermediate-files/publication-znf-sequences.tsv
+
+# 26 unique znf sequences in total
+```
+
+Allele znf content:
+- Add Hussin et al. to Berg et al. 2011, as Berg et al. 2011 has all alleles in Berg et al. 2010, plus two additional alleles
+- Ignore Ponting because it contains all alleles in Berg et al. 2010, one of which is incorrect
+- Ignore Baudat et al. for now because not all znfs can be deduced from the image alone
+```
+# combine lists of allele znf content
+cat intermediate-files/berg-2011-allele-content.tsv intermediate-files/hussin-2013-allele-content.tsv | grep . > intermediate-files/publication-allele-content.tsv
+
+wc -l intermediate-files/publication-allele-content.tsv
+# 39 unique alleles in total
+```
