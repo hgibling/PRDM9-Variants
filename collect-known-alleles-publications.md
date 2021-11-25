@@ -186,7 +186,7 @@ Allele DNA sequences:
 - Sequences are fasta screenshots in **Supplementary Figure S3B** instead of copy/pastable text (!)
 - Parse sequences from NCBI accessions instead
 
-#
+---
 
 ## Publications describing Allele znf content
 
