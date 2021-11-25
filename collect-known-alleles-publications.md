@@ -1,11 +1,15 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
-Literature searches revealed several publications that describe znf DNA sequences, allele znf content, allele DNA sequences, and/or allele mutations:
+Literature searches revealed several publications that describe znf DNA sequences, allele znf content, allele DNA sequence accession numbers, and/or allele mutations:
+- [Oliver 2009](#oliver-et-al-dec-2009)
+  - Allele DNA sequence accession numbers
 - [Baudat 2010](#baudat-et-al-feb-2010)
   - Allele znf content
-  - Allele DNA sequences
+  - Allele DNA sequence accession numbers
 - [Berg 2010](#berg-et-al-oct-2010)
   - Znf DNA sequences
   - Allele znf content
+  - Allele DNA sequence accession numbers
+
 - [Ponting 2011](#ponting-may-2011)
   - Allele znf content
 - [Berg 2011](#berg-et-al-jul-2011)
@@ -22,6 +26,8 @@ Literature searches revealed several publications that describe znf DNA sequence
 
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
+Genbank accession downloads are described in [additional documentation](/collect-known-alleles-genbank.md).
+
 Analysis steps:
 1. [Get allele and znf sequence data from publications](#1-get-allele-and-znf-sequence-data-from-publications)
 2. [Check if allele content and znf sequences are unique](#2-check-if-allele-content-and-znf-sequences-are-unique)
@@ -30,6 +36,23 @@ Analysis steps:
 ---
 
 ## 1. Get allele and znf sequence data from publications
+
+### Oliver et al. Dec 2009
+### Accelerated Evolution of the _Prdm9_ Speciation Gene across Diverse Metazoan Taxa
+**PMID: [19997497](https://pubmed.ncbi.nlm.nih.gov/19997497)**\
+**GenBank Accession Numbers: [FJ899863.1 - FJ899912.1](https://ncbi.nlm.nih.gov/nuccore/?term=FJ899863.1%3AFJ899912.1%5Baccn%5D)**
+
+Allele DNA sequence accession numbers:
+- Save accession numbers to: `genbank-records/oliver-2009-allele-sequence-accessions.txt`
+```
+# generate sequence of numbers representing genbank accession numbers
+for i in $(seq 899863 899912)
+do
+echo "FJ$i.1" >> genbank-records/oliver-2009-allele-sequence-accessions.txt
+done
+```
+
+#
 
 ### Baudat et al. Feb 2010
 ### _PRDM9_ is a major determinant of meiotic recombination hotspots in humans and mice
@@ -52,12 +75,17 @@ Allele znf content:
 awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-content-unnamed.tsv
 ```
 
-Allele DNA sequences:
+Allele DNA sequence accession numbers:
 - Includes alleles A-F, H-I
-- Sequences are fasta *screenshots* in **Supplementary Figure S3B** instead of copy/pastable text (!)
-- Will parse sequences from NCBI accession fastas instead
-
----
+- Sequences in **Supplementary Figure S3B** are _screenshots_ instead of copy/pastable text (!)
+- Save accession numbers to: `genbank-records/baudat-2010-allele-sequence-accessions.txt`
+```
+# generate sequence of numbers representing genbank accession numbers
+for i in $(seq 216222 216229)
+do
+echo "GU$i.1" >> genbank-records/baudat-2010-allele-sequence-accessions.txt
+done
+```
 
 #
 
@@ -83,6 +111,16 @@ Allele znf content:
 ```
 # remove extra columns, convert znf names to lowercase, tidy file, and sort alphabetically
 awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2010-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2010-allele-sequences.tsv
+```
+
+Allele DNA sequence accession numbers:
+- Save accession numbers to: `genbank-records/berg-2010-allele-sequence-accessions.txt`
+```
+# generate sequence of numbers representing genbank accession numbers
+for i in $(seq 210983 211006)
+do
+echo "HM$i.1" >> genbank-records/berg-2010-allele-sequence-accessions.txt
+done
 ```
 
 #
@@ -165,7 +203,7 @@ awk '{print $1 "\t" tolower($3)}' copy-paste-files/borel-2012-allele-copy.txt > 
 ### Hussin et al. Mar 2013
 ### Rare allelic forms of _PRDM9_ associated with childhood leukemogenesis
 **PMID: [23222848](https://pubmed.ncbi.nlm.nih.gov/23222848)**\
-**GenBank Accession Numbers: [JQ044371 – JQ044377](https://ncbi.nlm.nih.gov/nuccore/?term=JQ044371.1%3AJQ044377.1%5Baccn%5D)**
+**GenBank Accession Numbers: [JQ044371.1 – JQ044377.1](https://ncbi.nlm.nih.gov/nuccore/?term=JQ044371.1%3AJQ044377.1%5Baccn%5D)**
 
 Znf DNA sequences
 - Includes znfs a-x
@@ -183,6 +221,16 @@ Allele znf content
 ```
 # tidy file and sort alphabetically
 sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt | sort -k1,1V > intermediate-files/hussin-2013-allele-sequences.tsv
+```
+
+Allele DNA sequence accession numbers:
+- Save accession numbers to: `genbank-records/hussin-2013-allele-sequence-accessions.txt`
+```
+# generate sequence of numbers representing genbank accession numbers
+for i in $(seq 44371 44377)
+do
+echo "JQ0$i.1" >> genbank-records/hussin-2013-allele-sequence-accessions.txt
+done
 ```
 
 #
