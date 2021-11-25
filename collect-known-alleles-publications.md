@@ -24,7 +24,7 @@ When possible, sequences were copy/pasted from publications and saved as `firsta
 **PMID: 20818382**\
 **GenBank Accession Numbers: HM210983.1 – HM211006.1**
 
-Znf sequences:
+Znf DNA sequences:
 - Includes znfs a-t
 - Copy/pasted from **Supplementary Figure 1a** to `copy-paste-files/berg-2010-znf-copy.txt`
 - Final file: `intermediate-files/berg-2010-znf-sequences.tsv`
@@ -51,7 +51,7 @@ awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2010-allele-copy.txt | s
 **GenBank Accession Numbers: None**
 
 
-Znf sequences
+Znf DNA sequences
 - Includes previously described znfs a-l, o-t, plus newly described znfs u-v
 - Copy/pasted from **Supplementary Figure 1A** to `copy-paste-files/berg-2011-znf-copy.txt`
 - Final file: `intermediate-files/berg-2010-znf-sequences.tsv`
@@ -99,7 +99,7 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/berg-201
 **PMID: 23222848**\
 **GenBank Accession Numbers: JQ044371 – JQ044377**
 
-Znf sequences
+Znf DNA sequences
 - Includes previously described znfs a-t, plus newly described znfs u-w
 - However, Hussin et al. 2013 znfs u-v **do not** match Berg et al. 2011 znfs u-v
 - Copy/pasted from **Supplementary Figure S6** to `copy-paste-files/hussin-2013-znf-copy.txt`
