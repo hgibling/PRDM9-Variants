@@ -1,0 +1,9 @@
+A   13 NTOR|-W--|-WVT|-RVT|-RVT|-WVS|-WVT|-NHR|R-HR|--NS|-NHR|-NHR|NTGR 90% 94% 5
+B   13 NTOR|-W--|-WVT|-RVT|-RVT|-WVT|-WVT|-NHR|R-HR|--NS|-NHR|-NHR|NTGR    5%  4%  1
+I   16  NTOR|-W--|-WVT|-RVT|-RVT|-WVT|-WVT|-NHR|--HS|--NS|-WVR|--NS|--NS|--NS|-NHR|NTGR      2%  
+C   14  NTOR|-W--|-WVT|-RVT|-RVT|-WVT|-WVT|-NHR|--HS|--NS|-WVR|--NS|-NHR|NTGR  1.5%        1
+D   14  NTOR|-W--|-WVT|-RVT|-RVT|-WVS|-WVT|-NHR|--HS|R-HR|--NS|-NHR|-NHR|NTGR  2%      
+E   8   NTOR|-W--|-WVT|-RVT|--NS|-NHR|-NHR|NTGR   1.5%        
+F   11  NTOR|-W--|-WVT|-RVT|-RVT|-WVS|-WVT|-WVT|-NHR|--HR|NTGR            1
+H   13  NTOR|-W--|-WVT|-RVT|-RVS|-WVT|-NHR|R-HR|R-HR|--NS|-NHR|-NHR|NTGR           1
+K   16  NTOR|-W--|-WVT|-RVT|-RVT|-WVS|--HR|--HR|--NS|--NS|-NHR|R-HR|--NS|-NHR|-NHR|NTGR   0.5%        
