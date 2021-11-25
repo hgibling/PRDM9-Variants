@@ -26,7 +26,7 @@ Two steps completed:
 
 ### Berg et al. Oct 2010
 ### _PRDM9_ variation strongly influences recombination hot-spot activity and meiotic instability in humans
-**PMID: 20818382**\
+**PMID: [20818382](https://pubmed.ncbi.nlm.nih.gov/20818382)**\
 **GenBank Accession Numbers: HM210983.1 – HM211006.1**
 
 Znf DNA sequences:
@@ -52,7 +52,7 @@ awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2010-allele-copy.txt | s
 
 ### Berg et al. Jul 2011
 ### Variants of the protein _PRDM9_ differentially regulate a set of human meiotic recombination hotspots highly active in African populations
-**PMID: 21750151**\
+**PMID: [21750151](https://pubmed.ncbi.nlm.nih.gov/21750151)**\
 **GenBank Accession Numbers: None**
 
 
@@ -101,7 +101,7 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/berg-201
 
 ### Hussin et al. Mar 2013
 ### Rare allelic forms of _PRDM9_ associated with childhood leukemogenesis
-**PMID: 23222848**\
+**PMID: [23222848](https://pubmed.ncbi.nlm.nih.gov/23222848)**\
 **GenBank Accession Numbers: JQ044371 – JQ044377**
 
 Znf DNA sequences
@@ -155,7 +155,7 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 
 ### Baudat et al. Feb 2010
 ### _PRDM9_ is a major determinant of meiotic recombination hotspots in humans and mice
-**PMID: 20044539**\
+**PMID: [20044539](https://pubmed.ncbi.nlm.nih.gov/20044539)**\
 **GenBank Accession Numbers: GU216222.1 - GU216229.1**
 
 Allele znf content:
@@ -192,7 +192,7 @@ Allele DNA sequences:
 
 ### Ponting May 2011
 ### What are the genomic drivers of the rapid evolution of _PRDM9_?
-**PMID: 21388701**\
+**PMID: [21388701](https://pubmed.ncbi.nlm.nih.gov/21388701)**\
 **GenBank Accession Numbers: None**
 
 Allele znf content:
