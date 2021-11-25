@@ -16,10 +16,8 @@ Literature searches revealed several publications that describe one or more of t
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
 Two steps completed:
-- [Get allele and znf sequence data from publications](#-get-allele-and-znf-sequence-data-from-publications)
-- [Compile known znf sequences and allele znf content](#-compile-known-znf-sequences-and-allele-znf-content)
-
-[go here](#test)
+- [Get allele and znf sequence data from publications](#get-allele-and-znf-sequence-data-from-publications)
+- [Compile known znf sequences and allele znf content](#compile-known-znf-sequences-and-allele-znf-content)
 
 ---
 ## Get allele and znf sequence data from publications
