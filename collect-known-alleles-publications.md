@@ -11,6 +11,9 @@ Literature searches revealed several publications that describe znf DNA sequence
 - [Berg 2011](#berg-et-al-jul-2011)
   - Znf DNA sequences
   - Allele znf content
+- [Borel 2012](#borel-et-al-may-2012)
+  - Znf DNA sequences
+  - Allele znf content
 - [Hussin 2013](#hussin-et-al-mar-2013)
   - Znf DNA sequences
   - Allele znf content
@@ -221,6 +224,32 @@ diff intermediate-files/berg-2010-allele-content.tsv intermediate-files/ponting-
 ```
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Ponting-2011-Figure3.jpg?raw=true" width="500">
+
+#
+
+### Borel et al. May 2012
+### Evaluation of _PRDM9_ variation as a risk factor for recurrent genomic disorders and chromosomal non-disjunction
+**PMID: [22643917](https://pubmed.ncbi.nlm.nih.gov/20818382)**\
+**GenBank Accession Numbers: None**
+
+Znf DNA sequences:
+- Includes znfs a-m, q
+- Copy/pasted from **Supplementary Figure 1a** to `copy-paste-files/borel-2012-znf-copy.txt`
+- Final file: `intermediate-files/borel-2012-znf-sequences.tsv`
+```
+# convert znf names to lowercase and tidy file
+sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/' copy-paste-files/borel-2012-znf-copy.txt > intermediate-files/borel-2012-znf-sequences.tsv
+```
+
+Allele znf content:
+- Includes alleles A-F, I, L1, L19, L28-L31
+- Copy/pasted from **Supplementary Figure 1b** to `copy-paste-files/borel-2012-allele-copy.txt`
+- Final file: `intermediate-files/borel-2012-allele-content.tsv`
+
+```
+# remove extra column and convert znf names to lowercase
+awk '{print $1 "\t" tolower($3)}' copy-paste-files/borel-2012-allele-copy.txt > intermediate-files/borel-2012-allele-sequences.tsv
+```
 
 ---
 
