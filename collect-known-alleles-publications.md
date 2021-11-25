@@ -160,7 +160,7 @@ Allele znf content:
 - Includes alleles A-E described in Berg et al. 2010, plus alleles F, H-I, and K
 - Image in **Figure 2b** depicts znf content as unnamed blocks
   - Appears one block (`-NHR` in the legend) represents more than one znf as it appears in positions 11 & 12 in alleles A and B, which corresponds to znfs h and i
-  - Additionally, tne block in alleles F and K (`--HR`) and one block in allele H (`-RVS `)that are not also present in A-E
+  - Additionally, tne block in alleles F and K (`--HR`) and one block in allele H (`-RVS`)that are not also present in A-E
     - The znf content for these alleles cannot be deduced from the Berg et al. 2010 znf content
     - Need to obtain DNA sequences for these alleles and determine znf labels from there
   - Nevertheless, Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Baudat-2010-allele-copy.txt`
@@ -177,7 +177,7 @@ egrep "[AB]" intermediate-files/berg-2010-allele-content.tsv
 # A       abcddecfghfij
 # B       abcddccfghfij
 
-# alleles A and B have the same final 3 zinc fingers, of which those at positions 11 and 12 are znfs i and j, respectively
+# alleles A and B have the same final 3 zinc fingers, of which those at positions 11 and 12 are znfs h and i, respectively
 ```
 
 Allele DNA sequences:
