@@ -15,7 +15,12 @@ Literature searches revealed several publications that describe one or more of t
 
 When possible, sequences were copy/pasted from publications and saved as `firstauthor-year-type.txt` in the `copy-paste-files` directory. After tidying up, content was saved as `firstauthor-year-type.tsv` in the `intermediate-files` directory. 
 
+Two steps completed:
+- Get allele and znf sequence data from publications
+- Compile known znf sequences and allele znf content
+
 ---
+## Step 1: Get allele and znf sequence data from publications
 
 ## Publications describing Znf DNA sequences & Allele znf content
 
@@ -237,7 +242,6 @@ Znf DNA sequences:
 cat intermediate-files/berg-2010-znf-sequences.tsv intermediate-files/berg-2011-znf-sequences.tsv <(sed -e 's/u/U/' -e 's/v/V/' intermediate-files/hussin-2013-znf-sequences.tsv) | sort -f | uniq > intermediate-files/publication-znf-sequences.tsv
 
 wc -l intermediate-files/publication-znf-sequences.tsv
-
 # 26 unique znf sequences in total
 ```
 
