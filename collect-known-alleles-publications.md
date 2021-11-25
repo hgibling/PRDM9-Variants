@@ -1,6 +1,7 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
 Literature searches revealed several publications that describe znf DNA sequences, allele znf content, allele DNA sequence accession numbers, and/or allele mutations:
 - [Oliver 2009](#oliver-et-al-dec-2009)
+  - Znf DNA sequences
   - Allele DNA sequence accession numbers
 - [Baudat 2010](#baudat-et-al-feb-2010)
   - Allele znf content
@@ -41,6 +42,15 @@ Analysis steps:
 ### Accelerated Evolution of the _Prdm9_ Speciation Gene across Diverse Metazoan Taxa
 **PMID: [19997497](https://pubmed.ncbi.nlm.nih.gov/19997497)**\
 **GenBank Accession Numbers: [FJ899863.1 - FJ899912.1](https://ncbi.nlm.nih.gov/nuccore/?term=FJ899863.1%3AFJ899912.1%5Baccn%5D)**
+
+Znf DNA sequences:
+- Includes znfs 03-14
+- Copy/paste from **Supplementary Dataset S1** to: `copy-paste-files/oliver-2009-znf-copy.txt`
+- Tidy file: `intermediate-files/oliver-2009-znf-sequences.tsv`
+```
+# extract human znfs
+sed '/>/ s/$/NEWLINE/' copy-paste-files/oliver-2009-znf-copy.txt | tr -d '\n' | sed 's/>/\n/g' | grep "homo_sapien" | sed 's/NEWLINE/\t/' > intermediate-files/oliver-2009-znf-sequences.tsv
+```
 
 Allele DNA sequence accession numbers:
 - Save accession numbers to: `genbank-records/oliver-2009-allele-sequence-accessions.txt`
