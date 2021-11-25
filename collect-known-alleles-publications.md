@@ -157,12 +157,14 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 **GenBank Accession Numbers: GU216222.1 - GU216229.1**
 
 Allele znf content:
-- Includes alleles A-F, H-I, K
+- Includes alleles A-E described in Berg et al. 2010, plus alleles F, H-I, and K
 - Image in **Figure 2b** depicts znf content as unnamed blocks
-  - Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Baudat-2010-allele-copy.txt`
+  - Appears one block (`-NHR` in the legend) represents more than one znf as it appears in positions 11 & 12 in alleles A and B, which corresponds to znfs h and i
+  - Additionally, tne block in alleles F and K (`--HR`) and one block in allele H (`-RVS `)that are not also present in A-E
+    - The znf content for these alleles cannot be deduced from the Berg et al. 2010 znf content
+    - Need to obtain DNA sequences for these alleles and determine znf labels from there
+  - Nevertheless, Znf content typed out by hand, triple checked for accuracy, to `copy-paste-files/Baudat-2010-allele-copy.txt`
     - Named blocks by four-character code in figure legend (orange = `NTOR`; grey = `NTGR`), with `|` to separate blocks
-  - Compare colored blocks to znf content in alleles A-E from Berg et al. 2010 to deduce which block color corresponds to which znf
-  - Compare znf DNA sequences from inferred colored blocks to allele DNA sequences provided
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png?raw=true" width="600">
 ```
@@ -170,14 +172,12 @@ Allele znf content:
 awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-content-unnamed.tsv
 
 # print znf content for alleles A-E from Berg 2010
-egrep "[ABCDE]" intermediate-files/berg-2010-allele-content.tsv 
+egrep "[AB]" intermediate-files/berg-2010-allele-content.tsv 
 
 # A       abcddecfghfij
 # B       abcddccfghfij
-# C       abcddccfkhlhij
-# D       abcddecfkghfij
-# E       abcdhfij
 
+# alleles A and B have the same final 3 zinc fingers, of which those at positions 11 and 12 are znfs i and j, respectively
 ```
 
 Allele DNA sequences:
