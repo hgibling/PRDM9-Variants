@@ -3,6 +3,8 @@ Literature searches revealed several publications that describe znf DNA sequence
 - [Oliver 2009](#oliver-et-al-dec-2009)
   - Znf DNA sequences
   - Allele DNA sequence accession numbers
+- [Thomas 2009](#thomas-et-al-dec-2009)
+  - Znf DNA sequences
 - [Parvanov 2010](#parvanov-et-al-feb-2010)
   - Allele DNA sequence accession numbers
 - [Baudat 2010](#baudat-et-al-feb-2010)
@@ -77,6 +79,20 @@ do
 echo "FJ$i.1" >> genbank-records/oliver-2009-allele-sequence-accessions.txt
 done
 ```
+
+#
+
+### Thomas et al. Dec 2009
+### Extraordinary Molecular Evolution in the _PRDM9_ Fertility Gene
+**PMID: [20041164](https://pubmed.ncbi.nlm.nih.gov/20041164)**\
+**GenBank Accession Numbers: None**
+
+Znf DNA sequences:
+- Includes znfs `ZF1`-`ZF12`
+- Znf sequences depicted in **Figure 4**
+- Not copy/pastable
+
+<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Thomas-2009-Figure4.png?raw=true" width="600">
 
 #
 
