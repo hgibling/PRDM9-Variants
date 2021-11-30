@@ -267,7 +267,7 @@ Allele znf content:
 - Tidy file: `intermediate-files/jeffreys-2013-allele-znf-content.tsv`
 ```
 # convert from 2 'text columns' to one, remove extra columns and duplicated alleles, add temporary allele names Je_###
-egrep -vi "fig|type|no" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '/Man/{next} {print $0}' | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sort | uniq | awk '{printf "Je_%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
+egrep -vi "fig|type|no|man" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sort | uniq | awk '{printf "Je_%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
 ```
 
 #
@@ -369,7 +369,7 @@ grep "TGT" copy-paste-files/alleva-2021-SD2-znf-copy.tsv | cut -f1,5 > intermedi
 
 Allele znf content:
 - Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
-- Also includes alleles described in Jeffries 2013 observed in sperm cells
+  - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
 - Save **Supplementary Data File 3** to: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
 - Tidy file: `intermediate-files/alleva-2021-allele-znf-content.tsv`
 ```
