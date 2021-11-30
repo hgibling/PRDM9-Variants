@@ -262,12 +262,12 @@ awk '{if ($1 ~ /[A-Z]/) print $1 "\t" $3; else print $1 "\t" $2}' copy-paste-fil
 
 Allele znf content:
 - Study looks at low-frequency mutations in blood and genotypes of sperm cells; these alleles not necessarily observed as part of a human genotype
-- Includes alleles `Je001`-`Je562` (publication did not provide allele names, so name them here)
+- Includes alleles `Jeffreys001`-`Jeffreys559` (publication did not provide allele names, so name them here)
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/jeffreys-2013-allele-copy.txt`
 - Tidy file: `intermediate-files/jeffreys-2013-allele-znf-content.tsv`
 ```
-# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, add temporary allele names Je_###
-egrep -vi "fig|type|no|man" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sort | uniq | awk '{printf "Je_%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
+# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, remove gaps, add temporary allele names Je_###
+egrep -vi "fig|type|no|man" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sed 's/-//g' | sort | uniq | awk '{printf "Jeffreys%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
 ```
 
 #
@@ -375,6 +375,16 @@ Allele znf content:
 ```
 # remove extra lines and columns
 grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,3 > intermediate-files/alleva-2021-allele-znf-content.tsv
+```
+
+Allele DNA sequences:
+- Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
+  - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
+- From the same **Supplementary Data File 3** for allele znf content: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
+- Tidy file: `intermediate-files/alleva-2021-allele-sequences.tsv`
+```
+# remove extra lines and columns
+grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,6 > intermediate-files/alleva-2021-allele-sequences.tsv
 ```
 
 ---
