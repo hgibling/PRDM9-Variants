@@ -47,7 +47,7 @@ Genbank accession downloads are described in [additional documentation](/collect
 
 Analysis steps:
 1. [Get allele and znf sequence data from publications](#step-1-get-allele-and-znf-sequence-data-from-publications)
-2. [Check if allele content and znf sequences are unique](#step-2-check-if-allele-content-and-znf-sequences-are-unique)
+2. [Check if allele content and znf sequences are unique](#step-2-check-if-allele-znf-content-and-znf-sequences-are-unique)
 3. [Compile known znf sequences and allele znf content](#step-3-compile-known-znf-sequences-and-allele-znf-content)
 
 ---
@@ -110,13 +110,13 @@ Allele znf content:
   - Additionally, tne block in alleles F and K (`--HR`) and one block in allele H (`-RVS`)that are not also present in A-E
 - Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/baudat-2010-allele-copy.txt`
   - Name blocks by four-character code in figure legend (orange = `NTOR`; grey = `NTGR`), with `|` to separate blocks
-- Tidy file: `intermediate-files/baudat-2010-allele-copy.txt`
+- Tidy file: `intermediate-files/baudat-2010-allele-znf-content-unnamed.tsv`
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Baudat-2010-Figure2B.png?raw=true" width="600">
 
 ```
 # tidy file
-awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-content-unnamed.tsv
+awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-znf-content-unnamed.tsv
 ```
 
 Allele DNA sequence accession numbers:
@@ -143,18 +143,18 @@ Znf DNA sequences:
 - Copy/paste from **Supplementary Figure 1a** to: `copy-paste-files/berg-2010-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-znf-sequences.tsv`
 ```
-# convert znf names to lowercase and tidy file
-sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2010-znf-copy.txt > intermediate-files/berg-2010-znf-sequences.tsv
+# tidy file
+sed -e 's/\s/\t/' -e '$a\' copy-paste-files/berg-2010-znf-copy.txt > intermediate-files/berg-2010-znf-sequences.tsv
 ```
 
 Allele znf content:
 - Includes alleles `A`-`E`, `L1`-`L24`
 - Copy/paste from **Supplementary Figure 1b** to: `copy-paste-files/berg-2010-allele-copy.txt`
-- Tidy file: `intermediate-files/berg-2010-allele-content.tsv`
+- Tidy file: `intermediate-files/berg-2010-allele-znf-content.tsv`
 
 ```
-# remove extra columns, convert znf names to lowercase, tidy file, and sort alphabetically
-awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2010-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2010-allele-sequences.tsv
+# remove extra columns, tidy file, and sort alphabetically
+awk '{print $1 "\t" $3}' copy-paste-files/berg-2010-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2010-allele-znf-content.tsv
 ```
 
 Allele DNA sequence accession numbers:
@@ -179,12 +179,12 @@ Allele znf content:
 - Review paper
 - Image in **Figure 4** depicts znf content as named blocks
   - Cites Berg et al. 2010 for allele znf content
-- Type Znf content out by hand, triple check for accuracy, to: `copy-paste-files/ponting-2010-allele-content.txt`
+- Type Znf content out by hand, triple check for accuracy, to: `copy-paste-files/ponting-2010-allele-znf-content.txt`
   - Include gaps represented with `_`
-- Tidy file: `intermediate-files/ponting-2011-allele-content.tsv`
+- Tidy file: `intermediate-files/ponting-2011-allele-znf-content.tsv`
 ```
 # remove gaps and sort alphabetically
-sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2011-allele-copy.txt | cut -f1,2 | sort -k1,1V > intermediate-files/ponting-2011-allele-content.tsv
+sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2011-allele-copy.txt | cut -f1,2 | sort -k1,1V > intermediate-files/ponting-2011-allele-znf-content.tsv
 ```
 
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Ponting-2011-Figure3.jpg?raw=true" width="500">
@@ -196,24 +196,23 @@ sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2011-allele-copy.txt | c
 **PMID: [21750151](https://pubmed.ncbi.nlm.nih.gov/21750151)**\
 **GenBank Accession Numbers: None**
 
-
 Znf DNA sequences
 - Includes znfs `a`-`l`, `o`-`v`
 - Copy/paste from **Supplementary Figure 1A** to: `copy-paste-files/berg-2011-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2011-znf-sequences.tsv`
 ```
-# convert znf names to lowercase and tidy file
-sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2011-znf-copy.txt > intermediate-files/berg-2011-znf-sequences.tsv
+# tidy file
+sed -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2011-znf-copy.txt > intermediate-files/berg-2011-znf-sequences.tsv
 ```
 
 Allele znf content:
 - Includes alleles `A`-`E`, `L1`-`L27`
 - Copy/paste from **Supplementary Figure 1B** to: `copy-paste-files/berg-2011-allele-copy.txt`
-- Tidy file: `intermediate-files/berg-2010-allele-content.tsv`
+- Tidy file: `intermediate-files/berg-2010-allele-znf-content.tsv`
 
 ```
-# remove extra columns, convert znf names to lowercase, tidy file, and sort alphabetically
-awk '{print $1 "\t" tolower($3)}' copy-paste-files/berg-2011-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2011-allele-content.tsv
+# remove extra columns, tidy file, and sort alphabetically
+awk '{print $1 "\t" $3}' copy-paste-files/berg-2011-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2011-allele-znf-content.tsv
 ```
 
 #
@@ -228,18 +227,17 @@ Znf DNA sequences:
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-znf-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-znf-sequences.tsv`
 ```
-# convert znf names to lowercase and tidy file
-sed -e 's/^\(.\)/\L\1/' -e 's/\s/\t/' copy-paste-files/borel-2012-znf-copy.txt > intermediate-files/borel-2012-znf-sequences.tsv
+# tidy file
+sed -e 's/\s/\t/' copy-paste-files/borel-2012-znf-copy.txt > intermediate-files/borel-2012-znf-sequences.tsv
 ```
 
 Allele znf content:
 - Includes alleles `A`-`F`, `I`, `L1`, `L19`, `L28`-`L31`
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-allele-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-allele-znf-content.tsv`
-
 ```
-# remove extra column and convert znf names to lowercase
-awk '{print $1 "\t" tolower($3)}' copy-paste-files/borel-2012-allele-copy.txt > intermediate-files/borel-2012-allele-sequences.tsv
+# remove extra column
+awk '{print $1 "\t" $3}' copy-paste-files/borel-2012-allele-copy.txt > intermediate-files/borel-2012-allele-znf-content.tsv
 ```
 
 #
@@ -414,8 +412,8 @@ Allele znf content:
 - Ignore Baudat et al. for now because not all znfs can be deduced from the image alone
 ```
 # combine lists of allele znf content
-cat intermediate-files/berg-2011-allele-content.tsv intermediate-files/hussin-2013-allele-content.tsv | grep . > intermediate-files/publication-allele-content.tsv
+cat intermediate-files/berg-2011-allele-znf-content.tsv intermediate-files/hussin-2013-allele-znf-content.tsv | grep . > intermediate-files/publication-allele-znf-content.tsv
 
-wc -l intermediate-files/publication-allele-content.tsv
+wc -l intermediate-files/publication-allele-znf-content.tsv
 # 39 unique alleles in total
 ```
