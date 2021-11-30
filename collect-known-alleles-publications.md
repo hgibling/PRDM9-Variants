@@ -22,6 +22,7 @@ Literature searches revealed several publications that describe znf DNA sequence
   - Allele znf content
 - [Jeffreys 2013](#jeffreys-et-al-jan-2013)
   - Znf DNA sequences
+  - Allele znf content
 - [Hussin 2013](#hussin-et-al-mar-2013)
   - Znf DNA sequences
   - Allele znf content
@@ -266,7 +267,7 @@ Allele znf content:
 - Tidy file: `intermediate-files/jeffreys-2013-allele-znf-content.tsv`
 ```
 # convert from 2 'text columns' to one, remove extra columns and duplicated alleles, add temporary allele names Je_###
-egrep -vi "fig|type|no" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '/Man/{next} {print $0}' | sed -E -e 's/PRDM9|mutants//g' -e 's/sperm.*/sperm /g' -e 's/blood.*/blood /g' -e 's/Man /Man_/' -e 's/,\s*/_/g' -e 's/\s+/ /g' | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sort | uniq | awk '{printf "Je_%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
+egrep -vi "fig|type|no" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '/Man/{next} {print $0}' | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sort | uniq | awk '{printf "Je_%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
 ```
 
 #
