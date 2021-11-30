@@ -29,6 +29,8 @@ Literature searches revealed several publications that describe znf DNA sequence
   - Znf DNA sequences
   - Allele znf content
   - Allele DNA sequence accession numbers
+- [Beyter 2021](#beyter-et-al-may-2021)
+  - Allele structural variant positions
 - [Wang 2021](#wang-et-al-jul-2021)
   - Allele mutations
 - [Alleva 2021](#alleva-et-al-nov-2021)
@@ -185,6 +187,27 @@ done
 
 #
 
+### Kong et al. Oct 2010
+### Fine-scale recombination rate differences between sexes, populations and individuals
+**PMID: [20981099](https://pubmed.ncbi.nlm.nih.gov/20981099)**\
+**GenBank Accession Numbers: None**
+
+Allele znf content:
+- Includes alleles `Kong01`-`Kong16` (publication did not provide allele names, so name them here)
+- Image in **Supplementary Figure 4** depicts znf content as blocks named with the amino acids at repeat positions -1, 3 and 6 of the alpha helix
+- Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/kong-2010-allele-copy.txt`
+  - Add `-` to separate blocks
+- Tidy file: `intermediate-files/kong-2010-allele-znf-content-unnamed.tsv`
+
+<img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Kong-2010-SupFigure4.png?raw=true" width="600">
+
+```
+# remove gaps, tidy file, give new allele names
+awk '{print $2}' copy-paste-files/kong-2010-allele-copy.txt | sed -e 's/-\{2,\}/-/g' | grep "-" | sort | uniq | awk '{printf "Decode%02i\t%s\n", NR, $1}' > intermediate-files/kong-2010-allele-znf-content-unnamed.tsv
+```
+
+#
+
 ### Ponting May 2011
 ### What are the genomic drivers of the rapid evolution of _PRDM9_?
 **PMID: [21388701](https://pubmed.ncbi.nlm.nih.gov/21388701)**\
@@ -317,6 +340,26 @@ for i in $(seq 44371 44377)
 do
 echo "JQ0$i.1" >> genbank-records/hussin-2013-allele-sequence-accessions.txt
 done
+```
+
+#
+
+### Beyter et al. May 2021
+### Long-read sequencing of 3,622 Icelanders provides insight into the role of structural variants in human diseases and other traits
+**PMID: [33972781](https://pubmed.ncbi.nlm.nih.gov/33972781)**\
+**GenBank Accession Numbers: None**
+
+Allele structural variant positions:
+- Includes point mutations `c.229C>T:p.Arg77*`, `c.638T>G:p.Ile213Ser`, `c.677A>T:p.Lys226Met` relative to allele B (NM_020227.3)
+- Download structural variant vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
+- Tidy file: `intermediate-files/beyter-2021-allele-SVs.vcf`
+```
+# download vcf
+wget https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz -O copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
+
+# index vcf, subset to PRDM9 znf region
+tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
+tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 | #TODO
 ```
 
 #
