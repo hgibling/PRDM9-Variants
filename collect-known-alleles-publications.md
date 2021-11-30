@@ -195,7 +195,7 @@ done
 **GenBank Accession Numbers: None**
 
 Allele znf content:
-- Includes alleles `Kong01`-`Kong16` (publication did not provide allele names, so name them here)
+- Includes alleles `Kong01`-`Kong12` (publication did not provide allele names, so name them here)
 - Image in **Supplementary Figure 4** depicts znf content as blocks named with the amino acids at repeat positions -1, 3 and 6 of the alpha helix
 - Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/kong-2010-allele-copy.txt`
   - Add `-` to separate blocks
