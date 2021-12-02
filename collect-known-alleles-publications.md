@@ -356,12 +356,30 @@ Allele structural variant positions:
 - Download structural variant vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
 - Tidy file: `intermediate-files/beyter-2021-allele-SVs.vcf`
 ```
+# download GRCh38 chr5 fasta and index
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr5.fa.gz -O copy-paste-files/GRCh38-chr5.fa.gz
+gunzip copy-paste-files/GRCh38-chr5.fa.gz 
+gatk CreateSequenceDictionary -R copy-paste-files/GRCh38-chr5.fa
+samtools faidx copy-paste-files/GRCh38-chr5.fa
+grep -v ">" copy-paste-files/GRCh38-chr5.fa | tr -d '\n' | sed 's/$/\n/' > copy-paste-files/GRCh38-chr5.seq
+
 # download vcf
 wget https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz -O copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
 
 # index vcf, subset to PRDM9 znf region
 tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
-tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 | #TODO
+tabix -h copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 > intermediate-files/beyter-2021-allele-SVs.vcf
+#bgzip intermediate-files/beyter-2021-allele-SVs.vcf && tabix intermediate-files/beyter-2021-allele-SVs.vcf.gz
+
+# replace reference allele sequence with alternate SV sequences (but leave sequence as is for variant with no alt sequence)
+while read CHR POS ID REF ALT REMAINING
+do
+if [[ $ALT == "<ALT>" ]]
+then awk -v ID=$ID '{print ID"\t"substr($0,23526673,23527764-23526673+1)}' copy-paste-files/GRCh38-chr5.seq >> intermediate-files/beyter-2021-allele-sequences.tsv
+else
+awk -v ID=$ID -v ALT=$ALT -v POS=$POS -v REF=$REF '{print ID"\t"substr($0,23526673,POS-23526673)""ALT""substr($0,POS+length(REF),23527764-POS-length(REF)+1)}' copy-paste-files/GRCh38-chr5.seq >> intermediate-files/beyter-2021-allele-sequences.tsv
+fi
+done < <(grep -v "#" intermediate-files/beyter-2021-allele-SVs.vcf)
 ```
 
 #
