@@ -1,5 +1,5 @@
 # Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
-Literature searches revealed several publications that describe znf DNA sequences, znf amino acid sequences, allele znf content, allele DNA sequences and/or their accession numbers, and/or allele mutations:
+Literature searches revealed several publications that describe znf DNA sequences, znf amino acid sequences, allele znf content, allele DNA sequences and/or their accession numbers, allele mutations, and/or allele structural variants (SVs):
 - [Oliver 2009](#oliver-et-al-dec-2009)
   - Znf DNA sequences
   - Allele DNA sequence accession numbers
@@ -32,9 +32,11 @@ Literature searches revealed several publications that describe znf DNA sequence
   - Allele znf content
   - Allele DNA sequence accession numbers
 - [Beyter 2021](#beyter-et-al-may-2021)
-  - Allele structural variant positions
+  - Allele structural variants
+    - Allele DNA sequences (inferred)
 - [Wang 2021](#wang-et-al-jul-2021)
   - Allele mutations
+    - Allele DNA sequences (inferred)
 - [Alleva 2021](#alleva-et-al-nov-2021)
   - Znf DNA sequences
   - Znf amino acid sequences
@@ -351,7 +353,7 @@ done
 **PMID: [33972781](https://pubmed.ncbi.nlm.nih.gov/33972781)**\
 **GenBank Accession Numbers: None**
 
-Allele structural variant positions:
+Allele structural variants:
 - Includes SVs `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
   - `chr5:23526974:XN.5` has no alternate allele and is therefore the reference sequence
 - Download SV vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
@@ -365,7 +367,7 @@ tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
 tabix -h copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 > intermediate-files/beyter-2021-allele-SVs.vcf
 ```
 
-Allele DNA sequence:
+Allele DNA sequences:
 - Includes alleles `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
 - Modify reference sequence to replace reference sequences with alternate SV sequences from `intermediate-files/beyter-2021-allele-SVs.vcf`
 - Tidy file: `intermediate-files/beyter-2021-allele-sequences.tsv`
@@ -374,7 +376,7 @@ Allele DNA sequence:
 wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr5.fa.gz -O copy-paste-files/GRCh38-chr5.fa.gz
 zcat copy-paste-files/GRCh38-chr5.fa | grep -v ">" | tr -d '\n' | sed 's/$/\n/' | gzip > copy-paste-files/GRCh38-chr5.seq.gz
 
-# replace reference allele sequence with alternate SV sequences (but leave sequence as is for variant with no alt sequence)
+# replace reference allele sequence (znf domain) with alternate SV sequences; but leave sequence as is for variant with no alt sequence (reference sequence)
 while read CHR POS ID REF ALT REMAINING
 do
 if [[ $ALT == "<ALT>" ]]
