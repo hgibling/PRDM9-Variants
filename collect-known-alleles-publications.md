@@ -352,20 +352,27 @@ done
 **GenBank Accession Numbers: None**
 
 Allele structural variant positions:
-- Includes point mutations `c.229C>T:p.Arg77*`, `c.638T>G:p.Ile213Ser`, `c.677A>T:p.Lys226Met` relative to allele B (NM_020227.3)
-- Download structural variant vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
+- Includes SVs `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
+  - `chr5:23526974:XN.5` has no alternate allele and is therefore the reference sequence
+- Download SV vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
 - Tidy file: `intermediate-files/beyter-2021-allele-SVs.vcf`
 ```
-# download GRCh38 chr5 fasta
-wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr5.fa.gz -O copy-paste-files/GRCh38-chr5.fa.gz
-zcat copy-paste-files/GRCh38-chr5.fa | grep -v ">" | tr -d '\n' | sed 's/$/\n/' | gzip > copy-paste-files/GRCh38-chr5.seq.gz
-
 # download vcf
 wget https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz -O copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
 
 # index vcf, subset to PRDM9 znf region
 tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
 tabix -h copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 > intermediate-files/beyter-2021-allele-SVs.vcf
+```
+
+Allele DNA sequence:
+- Includes alleles `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
+- Modify reference sequence to replace reference sequences with alternate SV sequences from `intermediate-files/beyter-2021-allele-SVs.vcf`
+- Tidy file: `intermediate-files/beyter-2021-allele-sequences.tsv`
+```
+# download GRCh38 chr5 fasta
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr5.fa.gz -O copy-paste-files/GRCh38-chr5.fa.gz
+zcat copy-paste-files/GRCh38-chr5.fa | grep -v ">" | tr -d '\n' | sed 's/$/\n/' | gzip > copy-paste-files/GRCh38-chr5.seq.gz
 
 # replace reference allele sequence with alternate SV sequences (but leave sequence as is for variant with no alt sequence)
 while read CHR POS ID REF ALT REMAINING
@@ -405,7 +412,7 @@ sed '/>/ s/$/NEWLINE/' copy-paste-files/NM_020227.3-copy.txt | tr -d '\n' | sed 
 ```
 
 Allele sequences:
-- Modify reference sequence to incorporate each allele mutation and save as allele sequence
+- Modify reference sequence to incorporate each allele mutation from `intermediate-files/wang-2021-allele-mutations.tsv` and save as allele sequence
 - Tidy file: `intermediate-files/wang-2021-allele-sequences.tsv`
 ```
 # generate allele sequence based on point mutation data
