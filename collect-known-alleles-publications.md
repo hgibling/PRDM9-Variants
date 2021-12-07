@@ -1,4 +1,4 @@
-# Collecting known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
+# Collect known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
 Literature searches revealed several publications that describe znf DNA sequences, znf amino acid sequences, allele znf content, allele DNA sequences and/or their accession numbers, allele mutations, and/or allele structural variants (SVs):
 - [Oliver 2009](#oliver-et-al-dec-2009)
   - Znf DNA sequences
@@ -74,6 +74,19 @@ Znf DNA sequences:
 ```
 # extract human znfs
 sed '/>/ s/$/NEWLINE/' copy-paste-files/oliver-2009-znf-copy.txt | tr -d '\n' | sed 's/>/\n/g' | grep "homo_sapien" | sed 's/NEWLINE/\t/' > intermediate-files/oliver-2009-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/oliver-2009-znf-sequences.tsv
+# 12
+cut -f2 intermediate-files/oliver-2009-znf-sequences.tsv | sort | uniq | wc -l
+# 9
+
+# remove duplicate sequences, keeping lowest ID number
+sort -u -k2,2 intermediate-files/oliver-2009-znf-sequences.tsv | sort > intermediate-files/TEMP-oliver-2009-znf-sequences.tsv
+rm intermediate-files/oliver-2009-znf-sequences.tsv
+mv intermediate-files/TEMP-oliver-2009-znf-sequences.tsv intermediate-files/oliver-2009-znf-sequences.tsv
+wc -l intermediate-files/oliver-2009-znf-sequences.tsv
+# 9
 ```
 
 Allele DNA sequence accession numbers:
@@ -286,7 +299,7 @@ awk '{print $1 "\t" $3}' copy-paste-files/borel-2012-allele-copy.txt > intermedi
 #
 
 ### Jeffreys et al. Jan 2013
-### Recombination regulator PRDM9 influences the instability of its own coding sequence in humans
+### Recombination regulator _PRDM9_ influences the instability of its own coding sequence in humans
 **PMID: [23267059](https://pubmed.ncbi.nlm.nih.gov/23267059)**\
 **GenBank Accession Numbers: None**
 
@@ -298,7 +311,7 @@ Znf DNA sequences:
 - Tidy file: `intermediate-files/jeffreys-2013-znf-sequences.tsv`
 ```
 # remove extra characters and tidy file
-awk '{if ($1 ~ /[A-Z]/) print $1 "\t" $3; else print $1 "\t" $2}' copy-paste-files/jeffreys-2013-znf-copy.txt > intermediate-files/jeffreys-2013-znf-sequences.tsv
+awk '{if ($1 ~ /[A-T,V-Z]/) print $1 "\t" $3; else print $1 "\t" $2}' copy-paste-files/jeffreys-2013-znf-copy.txt > intermediate-files/jeffreys-2013-znf-sequences.tsv
 ```
 
 Allele znf content:
@@ -471,7 +484,18 @@ grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,6 > interm
 
 ---
 
-## Step 2. Check if allele content and znf sequences are unique
+## Step 2. Compile znf sequences and get list of unique znfs
+Append author & year to each znf name and save in new file
+```
+cd intermediate-files
+for FILE in *znf-sequences*
+do
+NAME=${FILE%-znf*}
+awk -v NAME="$NAME" '{print NAME "_" $1 "\t" $2}' $FILE >> publication-znf-sequences.tsv
+done
+```
+
+Check which sequences are identical/unique
 
 ---
 
