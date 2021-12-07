@@ -545,22 +545,25 @@ pub.znf <- read.table("publication-znf-sequences.tsv", header=F,
 # shift Oliver 2009 sequences to match the rest
 # pivot wider to obtain unique znf sequences as rows
 # arrange in publication order (not including Oliver)
-znf.sequences <- pub.znf %>%
-  tidyr::separate(PubZnfName, sep="_", into=c("Publication", "ZnfName"), extra="merge") %>%
-  mutate(Sequence=ifelse(Publication=="oliver-2009",
-                         sub("TGCAGGGAG", "", Sequence),
-                         Sequence)) %>%
-  mutate(Sequence=ifelse(Publication=="oliver-2009",
-                         sub("$", "TGCAGGGAG", Sequence),
-                         Sequence)) %>%
+---
+znf.sequences.sperm <- pub.znf %>%
+  separate(PubZnfName, sep="_", into=c("Publication", "ZnfName"), extra="merge") %>%
+  mutate(Publication=sub("-", ".", Publication)) %>%
+  mutate(Sequence=ifelse(Publication=="oliver.2009", sub("TGCAGGGAG", "", Sequence), Sequence)) %>%
+  mutate(Sequence=ifelse(Publication=="oliver.2009", sub("$", "TGCAGGGAG", Sequence), Sequence)) %>%
   pivot_wider(names_from=Publication, values_from=ZnfName) %>%
-  arrange(`berg-2010`, `berg-2011`, `borel-2012`, `jeffreys-2013`,
-          `hussin-2013`, `alleva-2021`)
+  arrange(berg.2010, berg.2011, borel.2012, jeffreys.2013, hussin.2013, alleva.2021)
 
-write.table(znf.sequences, "publication-unique-znf-sequences.tsv",
-            row.names=F, quote=F)
-```
+write.table(znf.sequences.sperm, "publication-unique-znf-sequences-with-somatic-and-sperm.tsv", row.names=F, quote=F)
 
+remove.germline <-znf.sequences %>%
+  filter(across(c(alleva.2021, jeffreys.2013), ~ !is.na(.x))) %>%
+  filter(across(c(-alleva.2021, -jeffreys.2013, -Sequence), is.na))
+
+znf.sequences <- znf.sequences.sperm %>%
+  anti_join(remove.germline)
+
+write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F)
 ---
 
 ## Step 3. Compile known znf sequences and allele znf content
