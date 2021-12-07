@@ -180,6 +180,12 @@ Znf DNA sequences:
 ```
 # tidy file
 sed -e 's/\s/\t/' -e '$a\' copy-paste-files/berg-2010-znf-copy.txt > intermediate-files/berg-2010-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/berg-2010-znf-sequences.tsv
+# 20
+cut -f2 intermediate-files/berg-2010-znf-sequences.tsv | sort | uniq | wc -l
+# 20
 ```
 
 Allele znf content:
@@ -259,6 +265,12 @@ Znf DNA sequences
 ```
 # tidy file
 sed -e 's/\s/\t/'  -e '$a\' copy-paste-files/berg-2011-znf-copy.txt > intermediate-files/berg-2011-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/berg-2011-znf-sequences.tsv
+# 20
+cut -f2 intermediate-files/berg-2011-znf-sequences.tsv | sort | uniq | wc -l
+# 20
 ```
 
 Allele znf content:
@@ -285,6 +297,12 @@ Znf DNA sequences:
 ```
 # tidy file
 sed -e 's/\s/\t/' copy-paste-files/borel-2012-znf-copy.txt > intermediate-files/borel-2012-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/borel-2012-znf-sequences.tsv
+# 14
+cut -f2 intermediate-files/borel-2012-znf-sequences.tsv | sort | uniq | wc -l
+# 14
 ```
 
 Allele znf content:
@@ -312,6 +330,12 @@ Znf DNA sequences:
 ```
 # remove extra characters and tidy file
 awk '{if ($1 ~ /[A-T,V-Z]/) print $1 "\t" $3; else print $1 "\t" $2}' copy-paste-files/jeffreys-2013-znf-copy.txt > intermediate-files/jeffreys-2013-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/jeffreys-2013-znf-sequences.tsv
+# 64
+cut -f2 intermediate-files/jeffreys-2013-znf-sequences.tsv | sort | uniq | wc -l
+# 64
 ```
 
 Allele znf content:
@@ -338,6 +362,12 @@ Znf DNA sequences:
 ```
 # remove extra lines and tidy file
 grep -v "Zinc" copy-paste-files/hussin-2013-znf-copy.txt | sed 's/\s/\t/' > intermediate-files/hussin-2013-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/hussin-2013-znf-sequences.tsv
+# 24
+cut -f2 intermediate-files/hussin-2013-znf-sequences.tsv | sort | uniq | wc -l
+# 24
 ```
 
 Allele znf content:
@@ -451,6 +481,12 @@ Znf DNA sequences:
 ```
 # remove extra lines and columns
 grep "TGT" copy-paste-files/alleva-2021-SD2-znf-copy.tsv | cut -f1,4 > intermediate-files/alleva-2021-znf-sequences.tsv
+
+# check if all unique
+wc -l intermediate-files/alleva-2021-znf-sequences.tsv
+# 81
+cut -f2 intermediate-files/alleva-2021-znf-sequences.tsv | sort | uniq | wc -l
+# 81
 ```
 
 Znf amino acid sequences:
