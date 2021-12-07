@@ -70,6 +70,7 @@ Analysis steps:
 Znf DNA sequences:
 - Includes znfs `03`-`14`
 - Copy/paste from **Supplementary Dataset S1** to: `copy-paste-files/oliver-2009-znf-copy.txt`
+  - Sequences are shifted and begin with the last 9 nucleotides of previous zinc finger
 - Tidy file: `intermediate-files/oliver-2009-znf-sequences.tsv`
 ```
 # extract human znfs
@@ -523,15 +524,42 @@ grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,6 > interm
 ## Step 2. Compile znf sequences and get list of unique znfs
 Append author & year to each znf name and save in new file
 ```
-cd intermediate-files
-for FILE in *znf-sequences*
+for FILE in intermediate-files/*znf-sequences*
 do
-NAME=${FILE%-znf*}
-awk -v NAME="$NAME" '{print NAME "_" $1 "\t" $2}' $FILE >> publication-znf-sequences.tsv
+NAME=$(basename ${FILE%-znf*})
+awk -v NAME="$NAME" '{print NAME "_" $1 "\t" $2}' $FILE >> intermediate-files/publication-znf-sequences.tsv
 done
 ```
 
 Check which sequences are identical/unique
+```
+# done in R
+
+library(tidyr)
+library(dplyr)
+
+pub.znf <- read.table("publication-znf-sequences.tsv", header=F,
+                  col.names=c("PubZnfName", "Sequence"))
+
+# separate author from znf name
+# shift Oliver 2009 sequences to match the rest
+# pivot wider to obtain unique znf sequences as rows
+# arrange in publication order (not including Oliver)
+znf.sequences <- pub.znf %>%
+  tidyr::separate(PubZnfName, sep="_", into=c("Publication", "ZnfName"), extra="merge") %>%
+  mutate(Sequence=ifelse(Publication=="oliver-2009",
+                         sub("TGCAGGGAG", "", Sequence),
+                         Sequence)) %>%
+  mutate(Sequence=ifelse(Publication=="oliver-2009",
+                         sub("$", "TGCAGGGAG", Sequence),
+                         Sequence)) %>%
+  pivot_wider(names_from=Publication, values_from=ZnfName) %>%
+  arrange(`berg-2010`, `berg-2011`, `borel-2012`, `jeffreys-2013`,
+          `hussin-2013`, `alleva-2021`)
+
+write.table(znf.sequences, "publication-unique-znf-sequences.tsv",
+            row.names=F, quote=F)
+```
 
 ---
 
