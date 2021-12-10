@@ -522,7 +522,7 @@ grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,6 > interm
 ---
 
 ## Step 2. Compile znf sequences and get list of unique znfs
-Append author & year to each znf name and save in new file
+Append author & year to each znf name and save in new file:
 ```
 for FILE in intermediate-files/*znf-sequences*
 do
@@ -531,7 +531,7 @@ awk -v NAME="$NAME" '{print NAME "_" $1 "\t" $2}' $FILE >> intermediate-files/pu
 done
 ```
 
-Check which sequences are identical/unique
+Check which sequences are identical/unique:
 ```
 # done in R
 
@@ -564,6 +564,14 @@ znf.sequences <- znf.sequences.sperm %>%
 
 write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
 ```
+
+Give standardized names to unique znf sequences (ZN###) and to somatic/sperm znf sequences (zn$$$):
+```
+tail -n +2 intermediate-files/publication-unique-znf-sequences.tsv | awk '{printf "ZN%03i\t%s\n", NR, $1}' > intermediate-files/standardized-znf-sequences-list.tsv
+cut -f2 intermediate-files/standardized-znf-sequences-list.tsv > intermediate-files/standardized-znf-seqs.txt
+grep -vf intermediate-files/standardized-znf-seqs.txt intermediate-files/publication-unique-znf-sequences-with-somatic-and-sperm.tsv | grep -v Sequence | awk '{printf "zn%03i\t%s\n", NR, $1}' > intermediate-files/standardized-znf-sequences-list-somatic-and-sperm.tsv
+```
+
 ---
 
 ## Step 3. Compile known znf sequences and allele znf content
