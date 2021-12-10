@@ -545,7 +545,6 @@ pub.znf <- read.table("publication-znf-sequences.tsv", header=F,
 # shift Oliver 2009 sequences to match the rest
 # pivot wider to obtain unique znf sequences as rows
 # arrange in publication order (not including Oliver)
----
 znf.sequences.sperm <- pub.znf %>%
   separate(PubZnfName, sep="_", into=c("Publication", "ZnfName"), extra="merge") %>%
   mutate(Publication=sub("-", ".", Publication)) %>%
@@ -564,6 +563,7 @@ znf.sequences <- znf.sequences.sperm %>%
   anti_join(remove.germline)
 
 write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F)
+```
 ---
 
 ## Step 3. Compile known znf sequences and allele znf content
