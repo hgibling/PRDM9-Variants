@@ -553,7 +553,7 @@ znf.sequences.sperm <- pub.znf %>%
   pivot_wider(names_from=Publication, values_from=ZnfName) %>%
   arrange(berg.2010, berg.2011, borel.2012, jeffreys.2013, hussin.2013, alleva.2021)
 
-write.table(znf.sequences.sperm, "publication-unique-znf-sequences-with-somatic-and-sperm.tsv", row.names=F, quote=F)
+write.table(znf.sequences.sperm, "publication-unique-znf-sequences-with-somatic-and-sperm.tsv", row.names=F, quote=F, sep="\t")
 
 remove.germline <-znf.sequences %>%
   filter(across(c(alleva.2021, jeffreys.2013), ~ !is.na(.x))) %>%
@@ -562,7 +562,7 @@ remove.germline <-znf.sequences %>%
 znf.sequences <- znf.sequences.sperm %>%
   anti_join(remove.germline)
 
-write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F)
+write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
 ```
 ---
 
