@@ -55,8 +55,8 @@ Genbank accession downloads are described in [additional documentation](/collect
 
 Analysis steps:
 1. [Get allele and znf sequence data from publications](#step-1-get-allele-and-znf-sequence-data-from-publications)
-2. [Check if allele content and znf sequences are unique](#step-2-check-if-allele-znf-content-and-znf-sequences-are-unique)
-3. [Compile known znf sequences and allele znf content](#step-3-compile-known-znf-sequences-and-allele-znf-content)
+2. [Compile known znf sequences and give standardized names](#step-2-compile-znf-sequences-get-list-of-unqie-znfs-and-give-them-standardized-names)
+3. [](#)
 
 ---
 
@@ -242,6 +242,8 @@ Allele znf content:
 - Review paper
 - Image in **Figure 4** depicts znf content as named blocks
   - Cites Berg et al. 2010 for allele znf content
+  - **However, znf content for allele L24 _does not_ match that for Berg et al. 2010**
+  - Via email communication with Ponting (Aug 2021), confirmed that L24 znf content depicted in Figure 4 is **incorrect**
 - Type Znf content out by hand, triple check for accuracy, to: `copy-paste-files/ponting-2010-allele-znf-content.txt`
   - Include gaps represented with `_`
 - Tidy file: `intermediate-files/ponting-2011-allele-znf-content.tsv`
@@ -372,12 +374,12 @@ cut -f2 intermediate-files/hussin-2013-znf-sequences.tsv | sort | uniq | wc -l
 ```
 
 Allele znf content:
-- Includes alleles `L32`-`L37`
+- Includes alleles `L32`-`L38`
 - Copy/paste from **Supplementary Material Page 7: Supplementary Results, Description of *PRDM9* Alleles and Novel ZnF Types** to `copy-paste-files/hussin-2013-allele-copy.txt`
-- Tidy file: `intermediate-files/hussin-2013-allele-sequences.tsv`
+- Tidy file: `intermediate-files/hussin-2013-allele-znf-content.tsv`
 ```
 # tidy file and sort alphabetically
-sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt | sort -k1,1V > intermediate-files/hussin-2013-allele-sequences.tsv
+sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt | sort -k1,1V | grep . > intermediate-files/hussin-2013-allele-znf-content.tsv
 ```
 
 Allele DNA sequence accession numbers:
@@ -521,7 +523,7 @@ grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,6 > interm
 
 ---
 
-## Step 2. Compile znf sequences and get list of unique znfs
+## Step 2. Compile znf sequences, get list of unique znfs, and give them standardized names
 Append author & year to each znf name and save in new file:
 ```
 for FILE in intermediate-files/*znf-sequences*
@@ -565,38 +567,62 @@ znf.sequences <- znf.sequences.sperm %>%
 write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
 ```
 
-Give standardized names to unique znf sequences (ZN###) and to somatic/sperm znf sequences (zn$$$):
+Give standardized names to unique znf sequences (ZN###):
 ```
-tail -n +2 intermediate-files/publication-unique-znf-sequences.tsv | awk '{printf "ZN%03i\t%s\n", NR, $1}' > intermediate-files/standardized-znf-sequences-list.tsv
+awk '{printf "ZN%03i\t%s\n", NR-1, $0}' intermediate-files/publication-unique-znf-sequences.tsv | sed 's/ZN000/StandardName/' > intermediate-files/standardized-znf-names-map.tsv
+tail -n +2 intermediate-files/standardized-znf-names-map.tsv | cut -f1,2 > intermediate-files/standardized-znf-sequences-list.tsv
+```
+
+Give standardized names to somatic/sperm znf sequences (zn###):
+```
 cut -f2 intermediate-files/standardized-znf-sequences-list.tsv > intermediate-files/standardized-znf-seqs.txt
-grep -vf intermediate-files/standardized-znf-seqs.txt intermediate-files/publication-unique-znf-sequences-with-somatic-and-sperm.tsv | grep -v Sequence | awk '{printf "zn%03i\t%s\n", NR, $1}' > intermediate-files/standardized-znf-sequences-list-somatic-and-sperm.tsv
+grep -vf intermediate-files/standardized-znf-seqs.txt intermediate-files/publication-unique-znf-sequences-with-somatic-and-sperm.tsv | awk '{printf "zn%03i\t%s\n", NR-1, $0}' | sed 's/zn000/StandardName/' > intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv
+tail -n +2 intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv | cut -f1,2 > intermediate-files/standardized-znf-sequences-just-somatic-and-sperm-list.tsv
 ```
 
 ---
 
-## Step 3. Compile known znf sequences and allele znf content
-
-Znf DNA sequences:
-- Combine Berg et al. 2010 and Berg et al. 2011, as the first contains znfs m & n and the second contains znfs u & v
-- Give Hussin et al. znfs u & v temporary names U & V, since they differ from Berg 2011 znfs u & v
-- Add Hussin et al znf sequences to the Berg sequences
-- Keep unique sequences
+## Step 3. Compile allele znf content, get list of unique alleles, and give them standardized names
+Append author & year to each allele name and save in new file:
 ```
-# combine lists of znf sequences
-cat intermediate-files/berg-2010-znf-sequences.tsv intermediate-files/berg-2011-znf-sequences.tsv <(sed -e 's/u/U/' -e 's/v/V/' intermediate-files/hussin-2013-znf-sequences.tsv) | sort -f | uniq > intermediate-files/publication-znf-sequences.tsv
-
-wc -l intermediate-files/publication-znf-sequences.tsv
-# 26 unique znf sequences in total
+# exclude files with unnamed znfs
+for FILE in intermediate-files/*allele-znf-content.tsv
+do
+NAME=$(basename ${FILE%-allele*})
+awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/publication-allele-znf-content.tsv
+done
 ```
 
-Allele znf content:
-- Add Hussin et al. to Berg et al. 2011, as Berg et al. 2011 has all alleles in Berg et al. 2010, plus two additional alleles
-- Ignore Ponting because it contains all alleles in Berg et al. 2010, one of which is incorrect
-- Ignore Baudat et al. for now because not all znfs can be deduced from the image alone
+Convert publication znf names to standardized names: ### TODO: fix entries with no StandardZnfContent
 ```
-# combine lists of allele znf content
-cat intermediate-files/berg-2011-allele-znf-content.tsv intermediate-files/hussin-2013-allele-znf-content.tsv | grep . > intermediate-files/publication-allele-znf-content.tsv
+# done in R
 
-wc -l intermediate-files/publication-allele-znf-content.tsv
-# 39 unique alleles in total
+library(tidyr)
+library(dplyr)
+library(stringr)
+
+pub.znf.map <- read.table("intermediate-files/standardized-znf-names-map.tsv", header=T)
+pub.znf.sperm.map <- read.table("intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv", header=T)
+
+pub.znf.map.long <- pub.znf.map %>%
+  bind_rows(pub.znf.sperm.map) %>%
+  select(-Sequence) %>%
+  pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubName",
+               values_drop_na=T)
+
+pub.allele.znf <- read.table("intermediate-files/publication-allele-znf-content.tsv",
+                             header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+
+pub.allele.znf.sperm <- pub.allele.znf %>%
+  mutate(Publication=sub("-", ".", Publication)) %>%
+  mutate(ZnfContent=case_when(
+    Publication=="alleva.2021" ~ gsub("(.{2})", "\\1_\\2", ZnfContent),
+    Publication!="alleva.2021" ~ gsub("(.)", "\\1_\\2", ZnfContent))) %>%
+  mutate(ZnfContent=sub("_$", "", ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  rename(PubName=ZnfContent) %>% 
+  group_by(Publication, AlleleName) %>%
+  left_join(pub.znf.map.long) %>%
+  summarize(StandardZnfContent=str_c(StandardName, collapse="_")) %>%
+  pivot_wider(names_from=Publication, values_from=AlleleName)
 ```
