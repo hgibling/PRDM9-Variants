@@ -570,9 +570,13 @@ znf.sequences <- znf.sequences.sperm %>%
   anti_join(remove.germline) %>%
   mutate(StandardName=paste0("ZN", str_pad(row_number(), 3, pad="0")), .before=1)
 
+# Save full mapping info
 write.table(remove.germline, "intermediate-files/standardized-znf-sequences-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map.tsv", row.names=F, quote=F, sep="\t")
 write.table(bind_rows(znf.sequences, remove.germline), "intermediate-files/standardized-znf-sequences-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+
+# Save just standard name and sequence
+write.table(bind_rows(znf.sequences, remove.germline) %>% select(StandardName, Sequence), "intermediate-files/standardized-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
 ```
 ---
 
@@ -595,19 +599,19 @@ library(tidyr)
 library(dplyr)
 library(stringr)
 
-pub.znf.map <- read.table("intermediate-files/standardized-znf-names-map.tsv", header=T)
-pub.znf.sperm.map <- read.table("intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv", header=T)
+pub.znf.map <- read.table("intermediate-files/standardized-znf-sequences-with-somatic-sperm-map.tsv", header=T)
 
 pub.znf.map.long <- pub.znf.map %>%
-  bind_rows(pub.znf.sperm.map) %>%
   select(-Sequence) %>%
   pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubName",
                values_drop_na=T)
 
-pub.allele.znf <- read.table("intermediate-files/publication-allele-znf-content.tsv",
+
+pub.allele <- read.table("intermediate-files/publication-allele-znf-content.tsv",
                              header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
 
-pub.allele.znf.sperm <- pub.allele.znf %>%
+# All unique sequences
+allele.znf.sperm <- pub.allele %>%
   mutate(Publication=sub("-", ".", Publication)) %>%
   mutate(ZnfContent=case_when(
     Publication=="alleva.2021" ~ gsub("(.{2})", "\\1_\\2", ZnfContent),
@@ -615,8 +619,39 @@ pub.allele.znf.sperm <- pub.allele.znf %>%
   mutate(ZnfContent=sub("_$", "", ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
   rename(PubName=ZnfContent) %>% 
+  # ponting.2011 used lowercase version of berg names, so convert join with berg
+  mutate(PubName=case_when(
+    Publication=="ponting.2011" ~ toupper(PubName),
+    TRUE ~ PubName)) %>%
   group_by(Publication, AlleleName) %>%
-  left_join(pub.znf.map.long) %>%
+  # duplicate berg.2010 znfs to make a copy for ponting.2011
+  # assume jeffreys.2013 N znf is the same as berg.2010 N znf and add
+  left_join(bind_rows(pub.znf.map.long,
+                      pub.znf.map.long %>% filter(Publication=="berg.2010") %>%
+                        mutate(Publication="ponting.2011"),
+                      pub.znf.map.long %>% filter(Publication=="berg.2010", PubName=="N") %>%
+                        mutate(Publication="jeffreys.2013"))) %>%
   summarize(StandardZnfContent=str_c(StandardName, collapse="_")) %>%
-  pivot_wider(names_from=Publication, values_from=AlleleName)
+  # remove ponting.2011 allele L24 since it is incorrect
+  filter(!(Publication=="ponting.2011" & AlleleName=="L24")) %>%
+  pivot_wider(names_from=Publication, values_from=AlleleName) %>%
+  arrange(berg.2010, berg.2011, ponting.2011, borel.2012, jeffreys.2013, hussin.2013, alleva.2021)
+
+# get list of alleles only observed in somatic blood/sperm
+remove.germline.allele <- allele.znf.sperm %>%
+  filter(across(c(alleva.2021, jeffreys.2013), ~ !is.na(.x))) %>%
+  filter(across(c(-alleva.2021, -jeffreys.2013, -StandardZnfContent), is.na)) %>%
+  mutate(StandardName=paste0("pr", str_pad(row_number(), 3, pad="0")), .before=1)
+
+# All unique sequences observed in populations
+allele.znf <- allele.znf.sperm %>%
+  anti_join(remove.germline.allele) %>%
+  mutate(StandardName=paste0("PR", str_pad(row_number(), 3, pad="0")), .before=1)
+
+write.table(remove.germline.allele, "intermediate-files/standardized-allele-znf-content-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(allele.znf, "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(bind_rows(allele.znf, remove.germline.allele), "intermediate-files/tandardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+
+# Save just standardized name and znf content
+write.table(bind_rows(allele.znf, remove.germline.allele) %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t")
 ```
