@@ -347,8 +347,8 @@ Allele znf content:
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/jeffreys-2013-allele-copy.txt`
 - Tidy file: `intermediate-files/jeffreys-2013-allele-znf-content.tsv`
 ```
-# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, remove gaps, add temporary allele names Je_###
-egrep -vi "fig|type|no|man" copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sed 's/-//g' | sort | uniq | awk '{printf "Jeffreys%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
+# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, remove gaps, add temporary allele names jeffreys###
+egrep -v "Man|allele|origin|Fig." copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sed 's/-//g' | sort | uniq | awk '{printf "Jeffreys%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
 ```
 
 #
