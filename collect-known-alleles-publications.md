@@ -343,11 +343,11 @@ cut -f2 intermediate-files/jeffreys-2013-znf-sequences.tsv | sort | uniq | wc -l
 
 Allele znf content:
 - Study looks at low-frequency mutations in blood and genotypes of sperm cells; these alleles not necessarily observed as part of a human genotype
-- Includes alleles `Jeffreys001`-`Jeffreys559` (publication did not provide allele names, so name them here)
+- Includes alleles `Jeffreys001`-`Jeffreys563` (publication did not provide allele names, so name them here)
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/jeffreys-2013-allele-copy.txt`
 - Tidy file: `intermediate-files/jeffreys-2013-allele-znf-content.tsv`
 ```
-# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, remove gaps, add temporary allele names jeffreys###
+# convert from 2 'text columns' to one, remove extra columns and duplicated alleles, remove gaps, add temporary allele names Jeffreys###
 egrep -v "Man|allele|origin|Fig." copy-paste-files/jeffreys-2013-allele-copy.txt | awk '{if (length($5) >= 4) print $1 "\n" $5; else if (length($6) >= 4) print $1 "\n" $6; else if (NF < 5 && length($3) >= 4) print $1 "\n" $3; else if (NF < 6 && length($3) < 4) print $1}' | sed 's/-//g' | sort | uniq | awk '{printf "Jeffreys%03i\t%s\n", NR, $1}' > intermediate-files/jeffreys-2013-allele-znf-content.tsv
 ```
 
