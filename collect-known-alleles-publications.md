@@ -56,7 +56,8 @@ Genbank accession downloads are described in [additional documentation](/collect
 Analysis steps:
 1. [Get allele and znf sequence data from publications](#step-1-get-allele-and-znf-sequence-data-from-publications)
 2. [Compile known znf sequences and give standardized names](#step-2-compile-znf-sequences-get-list-of-unqie-znfs-and-give-them-standardized-names)
-3. [](#)
+3. [Compile allele znf content, get list of unique alleles, and give them standardized names](#step-3-compile-allele-znf-content-get-list-of-unique-alleles-and-give-them-standardized-names)
+4. [Convert allele DNA sequences to standardized znf names to confirm known alleles and identify ones not in current list](#step-4-convert-allele-DNA-sequences-to-standardized-znf-names-to-confirm-known-alleles-and-identify-ones-not-in-current-list)
 
 ---
 
@@ -654,4 +655,14 @@ write.table(bind_rows(allele.znf, remove.germline.allele), "intermediate-files/t
 
 # Save just standardized name and znf content
 write.table(bind_rows(allele.znf, remove.germline.allele) %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t")
+```
+
+## Step 4. Convert allele DNA sequences to standardized znf names to confirm known alleles and identify ones not in current list
+Append author & year to each allele name and save in new file:
+```
+for FILE in intermediate-files/*allele-sequences*
+do
+NAME=$(basename ${FILE%-allele*})
+awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/publication-allele-sequences.tsv
+done
 ```
