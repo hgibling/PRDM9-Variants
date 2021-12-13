@@ -543,43 +543,37 @@ library(dplyr)
 pub.znf <- read.table("publication-znf-sequences.tsv", header=F,
                   col.names=c("PubZnfName", "Sequence"))
 
-# separate author from znf name
-# shift Oliver 2009 sequences to match the rest
-# pivot wider to obtain unique znf sequences as rows
-# arrange in publication order (not including Oliver)
+# All unique sequences
 znf.sequences.sperm <- pub.znf %>%
+  # separate author from znf name
   separate(PubZnfName, sep="_", into=c("Publication", "ZnfName"), extra="merge") %>%
   mutate(Publication=sub("-", ".", Publication)) %>%
+  # shift Oliver 2009 sequences to match the rest
   mutate(Sequence=ifelse(Publication=="oliver.2009", sub("TGCAGGGAG", "", Sequence), Sequence)) %>%
   mutate(Sequence=ifelse(Publication=="oliver.2009", sub("$", "TGCAGGGAG", Sequence), Sequence)) %>%
+  # pivot wider to obtain unique znf sequences as rows
   pivot_wider(names_from=Publication, values_from=ZnfName) %>%
+  # arrange in publication order (not including Oliver)
   arrange(berg.2010, berg.2011, borel.2012, jeffreys.2013, hussin.2013, alleva.2021)
 
-write.table(znf.sequences.sperm, "publication-unique-znf-sequences-with-somatic-and-sperm.tsv", row.names=F, quote=F, sep="\t")
+# get list of znfs only observed in somatic blood/sperm
+# a-z, symbols in jeffreys.2013
+remove.germline <-znf.sequences.sperm %>%
+  filter(!(jeffreys.2013 %in% LETTERS) & !is.na(jeffreys.2013)) %>%
+  # arrange in jeffreys.2013 figure S2 order
+  arrange(factor(jeffreys.2013, levels=c(letters, 1:9, 
+                                c("!", "@", "£", "$", "%", "&", "§", "*", ":", "±")))) %>%
+  mutate(StandardName=paste0("zn", str_pad(row_number(), 3, pad="0")), .before=1)
 
-remove.germline <-znf.sequences %>%
-  filter(across(c(alleva.2021, jeffreys.2013), ~ !is.na(.x))) %>%
-  filter(across(c(-alleva.2021, -jeffreys.2013, -Sequence), is.na))
-
+# All unique sequences observed in populations
 znf.sequences <- znf.sequences.sperm %>%
-  anti_join(remove.germline)
+  anti_join(remove.germline) %>%
+  mutate(StandardName=paste0("ZN", str_pad(row_number(), 3, pad="0")), .before=1)
 
-write.table(znf.sequences, "publication-unique-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
+write.table(remove.germline, "intermediate-files/standardized-znf-sequences-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(bind_rows(znf.sequences, remove.germline), "intermediate-files/standardized-znf-sequences-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 ```
-
-Give standardized names to unique znf sequences (ZN###):
-```
-awk '{printf "ZN%03i\t%s\n", NR-1, $0}' intermediate-files/publication-unique-znf-sequences.tsv | sed 's/ZN000/StandardName/' > intermediate-files/standardized-znf-names-map.tsv
-tail -n +2 intermediate-files/standardized-znf-names-map.tsv | cut -f1,2 > intermediate-files/standardized-znf-sequences-list.tsv
-```
-
-Give standardized names to somatic/sperm znf sequences (zn###):
-```
-cut -f2 intermediate-files/standardized-znf-sequences-list.tsv > intermediate-files/standardized-znf-seqs.txt
-grep -vf intermediate-files/standardized-znf-seqs.txt intermediate-files/publication-unique-znf-sequences-with-somatic-and-sperm.tsv | awk '{printf "zn%03i\t%s\n", NR-1, $0}' | sed 's/zn000/StandardName/' > intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv
-tail -n +2 intermediate-files/standardized-znf-names-just-somatic-and-sperm-map.tsv | cut -f1,2 > intermediate-files/standardized-znf-sequences-just-somatic-and-sperm-list.tsv
-```
-
 ---
 
 ## Step 3. Compile allele znf content, get list of unique alleles, and give them standardized names
