@@ -668,17 +668,19 @@ write.table(bind_rows(allele.znf, remove.germline.allele) %>% select(StandardNam
 ## Step 4. Convert allele DNA sequences to standardized znf names to confirm known alleles and identify ones not in current list
 Append author & year to each allele name and save in new file:
 ```
-for FILE in intermediate-files/*allele-sequences*
+for FILE in intermediate-files/*allele-sequences.tsv
 do
 NAME=$(basename ${FILE%-allele*})
 awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/publication-allele-sequences.tsv
 done
 ```
 
+Replace znf sequences with standardized znf names
 ```
 cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized.tsv
 while read ZNF SEQUENCE
 do
-sed -i '' 's/$SEQUENCE/$ZNF/g' intermediate-files/publication-allele-sequences-standardized.tsv
+sed -i "s/$SEQUENCE/$ZNF\_/g" intermediate-files/publication-allele-sequences-standardized.tsv
 done < intermediate-files/standardized-znf-sequences.tsv
+sed -i 's/\_$//' intermediate-files/publication-allele-sequences-standardized.tsv
 ```
