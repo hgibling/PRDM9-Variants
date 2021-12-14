@@ -577,7 +577,7 @@ write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map.ts
 write.table(bind_rows(znf.sequences, remove.germline), "intermediate-files/standardized-znf-sequences-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 
 # Save just standard name and sequence
-write.table(bind_rows(znf.sequences, remove.germline) %>% select(StandardName, Sequence), "intermediate-files/standardized-znf-sequences.tsv", row.names=F, quote=F, sep="\t")
+write.table(bind_rows(znf.sequences, remove.germline) %>% select(StandardName, Sequence), "intermediate-files/standardized-znf-sequences.tsv", row.names=F, quote=F, sep="\t", col.names=F)
 ```
 ---
 
@@ -651,10 +651,10 @@ allele.znf <- allele.znf.sperm %>%
 
 write.table(remove.germline.allele, "intermediate-files/standardized-allele-znf-content-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 write.table(allele.znf, "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
-write.table(bind_rows(allele.znf, remove.germline.allele), "intermediate-files/tandardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(bind_rows(allele.znf, remove.germline.allele), "intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 
 # Save just standardized name and znf content
-write.table(bind_rows(allele.znf, remove.germline.allele) %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t")
+write.table(bind_rows(allele.znf, remove.germline.allele) %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t", col.names=F)
 ```
 
 ## Step 4. Convert allele DNA sequences to standardized znf names to confirm known alleles and identify ones not in current list
@@ -665,4 +665,12 @@ do
 NAME=$(basename ${FILE%-allele*})
 awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/publication-allele-sequences.tsv
 done
+```
+
+```
+cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized.tsv
+while read ZNF SEQUENCE
+do
+sed -i '' 's/$SEQUENCE/$ZNF/g' intermediate-files/publication-allele-sequences-standardized.tsv
+done < intermediate-files/standardized-znf-sequences.tsv
 ```
