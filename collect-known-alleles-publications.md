@@ -465,10 +465,18 @@ Allele sequences:
 - Tidy file: `intermediate-files/wang-2021-allele-sequences.tsv`
 ```
 # generate allele sequence based on point mutation data
-while read variant position ref alt
+while read VARIANT POSITION REF ALT
 do
-grep -v ">" intermediate-files/NM_020227.3.fa |  sed -e "s|\(.\{$position\}\).|\1$alt|" -e "s/^/$variant\t/" >> intermediate-files/wang-2021-allele-sequences.tsv
+grep -v ">" intermediate-files/NM_020227.3.fa |  sed -e "s|\(.\{$POSITION\}\).|\1$ALT|" -e "s/^/$VARIANT\t/" >> intermediate-files/wang-2021-allele-sequences-full.txt
 done < intermediate-files/wang-2021-allele-mutations.tsv
+
+# get start position for the znf region
+ZNFA=$(egrep "^A" intermediate-files/berg-2010-znf-sequences.tsv | cut -f2)
+FULLSEQ=$(tail -1 intermediate-files/NM_020227.3.fa)
+ZNFSTART=${#${FULLSEQ%%$ZNFA*}}
+
+# subseq ref allele to keep just znf region (1092 bases long for reference allele B)
+awk -v ZNFSTART="$ZNFSTART" '{print $1 "\t" substr($2, ZNFSTART+1, 1092)}' intermediate-files/wang-2021-allele-sequences-full.txt > intermediate-files/wang-2021-allele-sequences.tsv
 ```
 
 #
