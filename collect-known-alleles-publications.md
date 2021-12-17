@@ -706,7 +706,7 @@ unknown <- allele.seqs.znf.converted %>%
 Three sequences from Beyter 2021 have unidentified sequences that don't have the expected lengths of 84bp. 
 Ignore alleles `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, and `chr5:23527530:FN.4` for now.
 
-Convert publication znf names to standardized names:
+Add any additional allele sequences to main list:
 ```
 # done in R
 
@@ -714,8 +714,29 @@ library(tidyr)
 library(dplyr)
 
 allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
-                                        header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+                                        header=F, col.names=c("Publication", "AlleleName", "StandardZnfContent"))
+allele.seqs.znf.map <- read.table("intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", 
+                                        header=T)
 
 
+allele.seqs <- allele.seqs.znf.converted %>%
+  # remove seqs with nucleotides left
+  filter(!grepl("[ACGT]", StandardZnfContent)) %>%
+  mutate(Publication=sub("-", ".", Publication)) %>%
+  pivot_wider(names_from=Publication, values_from=AlleleName) %>%
+  # join with original list of standardized allele znf content
+  full_join(allele.seqs.znf.map) %>%
+  relocate(StandardName, .before=StandardZnfContent) %>%
+  relocate(beyter.2021, .after=berg.2011) %>%
+  filter(!grepl("pr", StandardName)) %>%
+  arrange(StandardName) %>%
+  # add standardized name to new allele
+  mutate(StandardName=ifelse(is.na(StandardName), paste0("PR", str_pad(row_number(), 3, pad="0")), StandardName)) %>%
+  bind_rows(allele.seqs.znf.map %>% filter(grepl("pr", StandardName)))
 
+# rewrite files
+write.table(allele.seqs %>% filter(!grepl("pr", StandardName)), "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(allele.seqs, "intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+
+write.table(allele.seqs %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t", col.names=F)
 ```
