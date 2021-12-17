@@ -456,27 +456,21 @@ Reference allele:
 - Copy/paste NCBI fasta record to: `copy-paste-files/NM_020227.3-copy.txt`
 - Tidy file: `intermediate-files/NM_020227.3.fa`
 ```
-# collapse reference sequence to single lines
+# collapse reference sequence to single line
 sed '/>/ s/$/NEWLINE/' copy-paste-files/NM_020227.3-copy.txt | tr -d '\n' | sed 's/>/\n>/g' | sed 's/NEWLINE/\n/' > intermediate-files/NM_020227.3.fa
-```
-
-Allele sequences:
-- Modify reference sequence to incorporate each allele mutation from `intermediate-files/wang-2021-allele-mutations.tsv` and save as allele sequence
-- Tidy file: `intermediate-files/wang-2021-allele-sequences.tsv`
-```
-# generate allele sequence based on point mutation data
-while read VARIANT POSITION REF ALT
-do
-grep -v ">" intermediate-files/NM_020227.3.fa |  sed -e "s|\(.\{$POSITION\}\).|\1$ALT|" -e "s/^/$VARIANT\t/" >> intermediate-files/wang-2021-allele-sequences-full.txt
-done < intermediate-files/wang-2021-allele-mutations.tsv
 
 # get start position for the znf region
 ZNFA=$(egrep "^A" intermediate-files/berg-2010-znf-sequences.tsv | cut -f2)
 FULLSEQ=$(tail -1 intermediate-files/NM_020227.3.fa)
 ZNFSTART=${#${FULLSEQ%%$ZNFA*}}
 
-# subseq ref allele to keep just znf region (1092 bases long for reference allele B)
-awk -v ZNFSTART="$ZNFSTART" '{print $1 "\t" substr($2, ZNFSTART+1, 1092)}' intermediate-files/wang-2021-allele-sequences-full.txt > intermediate-files/wang-2021-allele-sequences.tsv
+echo $ZNFSTART
+# 1772
+# mutations observed in wang 2021 do not occur in the zinc finger domain (instead occur between base 229-638); these sequences can be ignored
+```
+
+Allele sequences:
+- Since the mutations occur before the zinc finger region, the alleles observed in this study are all reference alleles
 ```
 
 #
@@ -600,7 +594,7 @@ awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/p
 done
 ```
 
-Convert publication znf names to standardized names: ### TODO: fix entries with no StandardZnfContent
+Convert publication znf names to standardized names:
 ```
 # done in R
 
@@ -675,7 +669,7 @@ awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/p
 done
 ```
 
-Replace znf sequences with standardized znf names
+Replace znf sequences with standardized znf names:
 ```
 cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized.tsv
 while read ZNF SEQUENCE
@@ -683,4 +677,45 @@ do
 sed -i "s/$SEQUENCE/$ZNF\_/g" intermediate-files/publication-allele-sequences-standardized.tsv
 done < intermediate-files/standardized-znf-sequences.tsv
 sed -i 's/\_$//' intermediate-files/publication-allele-sequences-standardized.tsv
+```
+
+See if sequences that still have unnamed nucleotide chunks can be separated into 84bp chunks
+```
+# done in R
+
+library(tidyr)
+library(dplyr)
+
+allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
+                                        header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+
+unknown <- allele.seqs.znf.converted %>%
+  # get only seqs with nucleotides left
+  filter(grepl("[ACGT]", ZnfContent)) %>%
+  mutate(ZnfContent=gsub("([ACGT])(Z)", "\\1_\\2", ZnfContent, ignore.case=T)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  # remove known znfs
+  filter(!grepl("Z", ZnfContent)) %>%
+  mutate(ZnfLength=nchar(ZnfContent)) %>%
+  # try to split seqs at ending seq for all known znfs
+  mutate(ZnfContent=gsub("CAGGGAG", "CAGGGAG_", ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  mutate(ZnfLength=nchar(ZnfContent)) %>%
+  filter(ZnfLength!=0)
+```
+Three sequences from Beyter 2021 have unidentified sequences that don't have the expected lengths of 84bp. 
+Ignore alleles `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, and `chr5:23527530:FN.4` for now.
+
+Convert publication znf names to standardized names:
+```
+# done in R
+
+library(tidyr)
+library(dplyr)
+
+allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
+                                        header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+
+
+
 ```
