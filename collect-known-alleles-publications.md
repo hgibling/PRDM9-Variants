@@ -471,7 +471,7 @@ echo $ZNFSTART
 
 Allele sequences:
 - Since the mutations occur before the zinc finger region, the alleles observed in this study are all reference alleles
-```
+
 
 #
 
