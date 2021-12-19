@@ -30,11 +30,27 @@ cut -f1 genbank-records/PRDM9-complete-record.tsv | sort > genbank-records/PRDM9
 # check that all publication accessions are present
 cat genbank-records/*allele-sequence-accessions.txt > genbank-records/publication-accessions.txt
 wc -l genbank-records/publication-accessions.txt
-# 95
 grep -f genbank-records/publication-accessions.txt genbank-records/PRDM9-accessions.txt | wc -l
-# 95
+# 95 for each
 # 33 additional records from genbank search
 ```
 
 ## Replace genbank sequences with standardized znf names
+```
+cut -f1,3 genbank-records/PRDM9-complete-record.tsv > genbank-records/PRDM9-complete-record-temp.tsv 
 
+while read ZNF SEQUENCE
+do
+sed -i '' "s/$SEQUENCE/$ZNF\_/g" genbank-records/PRDM9-complete-record-temp.tsv
+done < intermediate-files/standardized-znf-sequences.tsv
+
+# remove leading and trailing sequences
+# all alleles start with ZN001
+# last part of exon 11 after the last znf is GATGAGTAA; some records only have GATGAG trailing, some have more
+sed -i '' -e 's/\t[ACGT]*ZN001/\tZN001/' -e 's/GATGAG\(TAA\)*.*$//' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/' -e 's/_$//' genbank-records/PRDM9-complete-record-temp.tsv
+```
+
+## Check into sequences without known znfs
+```
+
+```

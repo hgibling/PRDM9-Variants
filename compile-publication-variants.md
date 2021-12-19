@@ -38,12 +38,12 @@ remove.germline <-znf.sequences.sperm %>%
   # arrange in jeffreys.2013 figure S2 order
   arrange(factor(jeffreys.2013, levels=c(letters, 1:9, 
                                 c("!", "@", "£", "$", "%", "&", "§", "*", ":", "±")))) %>%
-  mutate(StandardName=paste0("zn", str_pad(row_number(), 3, pad="0")), .before=1)
+  mutate(StandardName=paste0("z", str_pad(row_number(), 3, pad="0")), .before=1)
 
 # All unique sequences observed in populations
 znf.sequences <- znf.sequences.sperm %>%
   anti_join(remove.germline) %>%
-  mutate(StandardName=paste0("ZN", str_pad(row_number(), 3, pad="0")), .before=1)
+  mutate(StandardName=paste0("Z", str_pad(row_number(), 3, pad="0")), .before=1)
 
 # Save full mapping info
 write.table(remove.germline, "intermediate-files/standardized-znf-sequences-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
@@ -117,12 +117,12 @@ allele.znf.sperm <- pub.allele %>%
 remove.germline.allele <- allele.znf.sperm %>%
   filter(across(c(alleva.2021, jeffreys.2013), ~ !is.na(.x))) %>%
   filter(across(c(-alleva.2021, -jeffreys.2013, -StandardZnfContent), is.na)) %>%
-  mutate(StandardName=paste0("pr", str_pad(row_number(), 3, pad="0")), .before=1)
+  mutate(StandardName=paste0("p", str_pad(row_number(), 3, pad="0")), .before=1)
 
 # All unique sequences observed in populations
 allele.znf <- allele.znf.sperm %>%
   anti_join(remove.germline.allele) %>%
-  mutate(StandardName=paste0("PR", str_pad(row_number(), 3, pad="0")), .before=1)
+  mutate(StandardName=paste0("P", str_pad(row_number(), 3, pad="0")), .before=1)
 
 write.table(remove.germline.allele, "intermediate-files/standardized-allele-znf-content-only-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 write.table(allele.znf, "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
@@ -205,14 +205,14 @@ allele.seqs <- allele.seqs.znf.converted %>%
   full_join(allele.seqs.znf.map) %>%
   relocate(StandardName, .before=StandardZnfContent) %>%
   relocate(beyter.2021, .after=berg.2011) %>%
-  filter(!grepl("pr", StandardName)) %>%
+  filter(!grepl("p", StandardName)) %>%
   arrange(StandardName) %>%
   # add standardized name to new allele
-  mutate(StandardName=ifelse(is.na(StandardName), paste0("PR", str_pad(row_number(), 3, pad="0")), StandardName)) %>%
-  bind_rows(allele.seqs.znf.map %>% filter(grepl("pr", StandardName)))
+  mutate(StandardName=ifelse(is.na(StandardName), paste0("P", str_pad(row_number(), 3, pad="0")), StandardName)) %>%
+  bind_rows(allele.seqs.znf.map %>% filter(grepl("p", StandardName)))
 
 # rewrite files
-write.table(allele.seqs %>% filter(!grepl("pr", StandardName)), "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(allele.seqs %>% filter(!grepl("p", StandardName)), "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
 write.table(allele.seqs, "intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
 
 write.table(allele.seqs %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t", col.names=F)
