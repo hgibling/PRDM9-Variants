@@ -19,7 +19,7 @@ Search GenBank for _PRDM9_ nucleotide sequences
 - Tidy file: `genbank-records/PRDM9-complete-record.fa`
 ```
 # remove blank lines, collapse sequences to single lines
- cat copy-paste-files/genbank-PRDM9-complete-record_2021-12-19.fa | tr -d '\n' | sed 's/>/\n>/g' | sed 's/NEWLINE/\n/' > genbank-records/PRDM9-complete-record.fa
+sed '/>/ s/$/NEWLINE/' copy-paste-files/genbank-PRDM9-complete-record_2021-12-19.fa | tr -d '\n' | sed 's/>/\n>/g' | sed 's/NEWLINE/\n/' > genbank-records/PRDM9-complete-record.fa
 
 # turn into tsv
 cat genbank-records/PRDM9-complete-record.fa | tr '\n' '\t' | sed 's/\t>/\n/g' | sed 's/ /\t/' > genbank-records/PRDM9-complete-record.tsv
@@ -36,4 +36,5 @@ grep -f genbank-records/publication-accessions.txt genbank-records/PRDM9-accessi
 # 33 additional records from genbank search
 ```
 
-## 
+## Replace genbank sequences with standardized znf names
+
