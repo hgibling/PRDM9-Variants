@@ -147,10 +147,12 @@ done
 Replace znf sequences with standardized znf names:
 ```
 cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized.tsv
+
 while read ZNF SEQUENCE
 do
 sed -i "s/$SEQUENCE/$ZNF\_/g" intermediate-files/publication-allele-sequences-standardized.tsv
 done < intermediate-files/standardized-znf-sequences.tsv
+
 sed -i 's/\_$//' intermediate-files/publication-allele-sequences-standardized.tsv
 ```
 
