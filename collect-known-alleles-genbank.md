@@ -105,8 +105,34 @@ These are short fragments not long enough to be full znf regions
 
 library(tidyr)
 library(dplyr)
+library(stringr)
 
 genbank.seqs <- read.table("genbank-records/PRDM9-complete-record-temp.tsv", 
-                                        header=F, col.names=c("Acession", "ZnfContent"))
+                            header=F, col.names=c("Accession", "ZnfContent"))
+pub.accessions <- read.table("genbank-records/publication-accessions.txt",
+                            header=F, col.names=c("Publication", "Accession"))
 
+missing <- genbank.seqs %>%
+  # remove fully known or fully unknown sequences
+  filter(grepl("z", ZnfContent, ignore.case=T)) %>%
+  filter(grepl("[ACGT]", ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  group_by(Accession) %>%
+  mutate(ZnfPosition=row_number()) %>%
+  filter(!grepl("z", ZnfContent, ignore.case=T)) %>%
+  # check length of unknown sequences
+  mutate(ZnfLength=nchar(ZnfContent)) %>%
+  left_join(pub.accessions)
+
+znf.length <- missing %>%
+  ungroup() %>%
+  filter(ZnfLength==84)
+
+novel.znf <- znf.length %>%
+  select(ZnfContent) %>%
+  distinct() %>%
+  # add standardized name, continuing after last one: Z038
+  mutate(StandardName=paste0("Z", str_pad(row_number()+38, 3, pad="0")), .before=1)
 ```
+
+#TODO: check what kind of sample each publication used

@@ -189,6 +189,7 @@ Add any additional allele sequences to main list:
 
 library(tidyr)
 library(dplyr)
+library(stringr)
 
 allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
                                         header=F, col.names=c("Publication", "AlleleName", "StandardZnfContent"))
