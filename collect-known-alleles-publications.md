@@ -70,7 +70,7 @@ Analysis steps:
 **PMID: [19997497](https://pubmed.ncbi.nlm.nih.gov/19997497)**\
 **GenBank Accession Numbers: [FJ899863.1 - FJ899912.1](https://ncbi.nlm.nih.gov/nuccore/?term=FJ899863.1%3AFJ899912.1%5Baccn%5D)**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes znfs `03`-`14`
 - Copy/paste from **Supplementary Dataset S1** to: `copy-paste-files/oliver-2009-znf-copy.txt`
   - Sequences are shifted and begin with the last 9 nucleotides of previous zinc finger
@@ -93,7 +93,7 @@ wc -l intermediate-files/oliver-2009-znf-sequences.tsv
 # 9
 ```
 
-Allele DNA sequence accession numbers:
+**Allele DNA sequence accession numbers**:
 - Save accession numbers to: `genbank-records/oliver-2009-allele-sequence-accessions.txt`
 ```
 # generate sequence of numbers representing genbank accession numbers
@@ -110,7 +110,7 @@ done
 **PMID: [20041164](https://pubmed.ncbi.nlm.nih.gov/20041164)**\
 **GenBank Accession Numbers: None**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes znfs `ZF1`-`ZF12`
 - Znf sequences depicted in **Figure 4**
 - Not copy/pastable
@@ -124,7 +124,7 @@ Znf DNA sequences:
 **PMID: [20044538](https://pubmed.ncbi.nlm.nih.gov/20044538)**\
 **GenBank Accession Numbers: [GU183914.1 - GU183919.1](https://ncbi.nlm.nih.gov/nuccore/?term=GU216222.1%3AGU216229.1%5Baccn%5D)**
 
-Allele DNA sequence accession numbers:
+**Allele DNA sequence accession numbers**:
 - Accession numbers listed on **Supplementary Material page 3: Material and Methods, Gene Bank Numbers** include from GU183909-GU183919, but only GU183914-GU183919 are human (the others are mouse)
 - Save accession numbers to: `genbank-records/parvanov-2010-allele-sequence-accessions.txt`
 ```
@@ -135,7 +135,7 @@ echo "GU$i.1" >> genbank-records/parvanov-2010-allele-sequence-accessions.txt
 done
 ```
 
-Allele amino acid sequences:
+**Allele amino acid sequences**:
 - Includes alleles `AA1`-`AA11`, `CH1`-`CH3`, `M1`, `M2`
 - Copy/paste from **Supplementary Figure S3A** to: `copy-paste-files/parvanov-2010-allele-aminos.txt`
   - Moved blocks to one-per-column and put names on top in this file for easier tidying
@@ -159,7 +159,7 @@ rm intermediate-files/parvanov-2010-aminos-TEMP.txt
 **PMID: [20044539](https://pubmed.ncbi.nlm.nih.gov/20044539)**\
 **GenBank Accession Numbers: [GU216222.1 - GU216229.1](https://ncbi.nlm.nih.gov/nuccore/?term=GU216222.1%3AGU216229.1%5Baccn%5D)**
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`E`, `F`, `H`-`I`, `K`
 - Image in **Figure 2b** depicts znf content as unnamed blocks
   - Appears one block (`-NHR` in the legend) represents more than one znf as it appears in positions 11 & 12 in alleles A and B
@@ -175,7 +175,7 @@ Allele znf content:
 awk '{print $1 "\t" $3}' copy-paste-files/baudat-2010-allele-copy.txt > intermediate-files/baudat-2010-allele-znf-content-unnamed.tsv
 ```
 
-Allele DNA sequence accession numbers:
+**Allele DNA sequence accession numbers**:
 - Includes alleles `A`-`F`, `H`-`I`
 - Sequences in **Supplementary Figure S3B** are _screenshots_ instead of copy/pastable text (!)
 - Save accession numbers to: `genbank-records/baudat-2010-allele-sequence-accessions.txt`
@@ -194,7 +194,7 @@ done
 **PMID: [20818382](https://pubmed.ncbi.nlm.nih.gov/20818382)**\
 **GenBank Accession Numbers: [HM210983.1 – HM211006.1](https://ncbi.nlm.nih.gov/nuccore/?term=HM210983.1%3AHM211006.1%5Baccn%5D)**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes znfs `a`-`t`
 - Copy/paste from **Supplementary Figure 1a** to: `copy-paste-files/berg-2010-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-znf-sequences.tsv`
@@ -209,7 +209,7 @@ cut -f2 intermediate-files/berg-2010-znf-sequences.tsv | sort | uniq | wc -l
 # 20
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`E`, `L1`-`L24`
 - Copy/paste from **Supplementary Figure 1b** to: `copy-paste-files/berg-2010-allele-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-allele-znf-content.tsv`
@@ -219,7 +219,7 @@ Allele znf content:
 awk '{print $1 "\t" $3}' copy-paste-files/berg-2010-allele-copy.txt | sort -k1,1V > intermediate-files/berg-2010-allele-znf-content.tsv
 ```
 
-Allele DNA sequence accession numbers:
+**Allele DNA sequence accession numbers**:
 - Save accession numbers to: `genbank-records/berg-2010-allele-sequence-accessions.txt`
 ```
 # generate sequence of numbers representing genbank accession numbers
@@ -236,7 +236,7 @@ done
 **PMID: [20981099](https://pubmed.ncbi.nlm.nih.gov/20981099)**\
 **GenBank Accession Numbers: None**
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `Kong01`-`Kong12` (publication did not provide allele names, so name them here)
 - Image in **Supplementary Figure 4** depicts znf content as blocks named with the amino acids at repeat positions -1, 3 and 6 of the alpha helix
 - Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/kong-2010-allele-copy.txt`
@@ -257,7 +257,7 @@ awk '{print $2}' copy-paste-files/kong-2010-allele-copy.txt | sed -e 's/-\{2,\}/
 **PMID: [21388701](https://pubmed.ncbi.nlm.nih.gov/21388701)**\
 **GenBank Accession Numbers: None**
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`L24`
 - Review paper
 - Image in **Figure 4** depicts znf content as named blocks
@@ -281,7 +281,7 @@ sed -e 's/\s/\t/g' -e 's/_//g' copy-paste-files/ponting-2011-allele-copy.txt | c
 **PMID: [21750151](https://pubmed.ncbi.nlm.nih.gov/21750151)**\
 **GenBank Accession Numbers: None**
 
-Znf DNA sequences
+**Znf DNA sequences**:
 - Includes znfs `a`-`l`, `o`-`v`
 - Copy/paste from **Supplementary Figure 1A** to: `copy-paste-files/berg-2011-znf-copy.txt`
 - Tidy file: `intermediate-files/berg-2011-znf-sequences.tsv`
@@ -296,7 +296,7 @@ cut -f2 intermediate-files/berg-2011-znf-sequences.tsv | sort | uniq | wc -l
 # 20
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`E`, `L1`-`L27`
 - Copy/paste from **Supplementary Figure 1B** to: `copy-paste-files/berg-2011-allele-copy.txt`
 - Tidy file: `intermediate-files/berg-2010-allele-znf-content.tsv`
@@ -313,7 +313,7 @@ awk '{print $1 "\t" $3}' copy-paste-files/berg-2011-allele-copy.txt | sort -k1,1
 **PMID: [22643917](https://pubmed.ncbi.nlm.nih.gov/22643917)**\
 **GenBank Accession Numbers: None**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes znfs `a`-`m`, `q`
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-znf-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-znf-sequences.tsv`
@@ -328,7 +328,7 @@ cut -f2 intermediate-files/borel-2012-znf-sequences.tsv | sort | uniq | wc -l
 # 14
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`F`, `I`, `L1`, `L19`, `L28`-`L31`
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-allele-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-allele-znf-content.tsv`
@@ -344,7 +344,7 @@ awk '{print $1 "\t" $3}' copy-paste-files/borel-2012-allele-copy.txt > intermedi
 **PMID: [23267059](https://pubmed.ncbi.nlm.nih.gov/23267059)**\
 **GenBank Accession Numbers: None**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Study looks at low-frequency mutations in blood and genotypes of sperm cells; these znfs not necessarily observed as part of a human genotype
 - Includes znfs `A`-`L`, `O`-`V`, `a`-`z`, `1-9`, `!`, `@`, `£`, `$`, `%`, `&`, `§`, `*`, `:`, `±`
 - Copy/paste from **Supplementary Figure S2** to: `copy-paste-files/jeffreys-2013-znf-copy.txt`
@@ -361,7 +361,7 @@ cut -f2 intermediate-files/jeffreys-2013-znf-sequences.tsv | sort | uniq | wc -l
 # 64
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Study looks at low-frequency mutations in blood and genotypes of sperm cells; these alleles not necessarily observed as part of a human genotype
 - Includes alleles `Jeffreys001`-`Jeffreys563` (publication did not provide allele names, so name them here)
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/jeffreys-2013-allele-copy.txt`
@@ -378,7 +378,7 @@ egrep -v "Man|allele|origin|Fig." copy-paste-files/jeffreys-2013-allele-copy.txt
 **PMID: [23222848](https://pubmed.ncbi.nlm.nih.gov/23222848)**\
 **GenBank Accession Numbers: [JQ044371.1 – JQ044377.1](https://ncbi.nlm.nih.gov/nuccore/?term=JQ044371.1%3AJQ044377.1%5Baccn%5D)**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes znfs `a`-`x`
 - Copy/paste from **Supplementary Figure S6** to: `copy-paste-files/hussin-2013-znf-copy.txt`
 - Tidy file: `intermediate-files/hussin-2013-znf-sequences.tsv`
@@ -393,7 +393,7 @@ cut -f2 intermediate-files/hussin-2013-znf-sequences.tsv | sort | uniq | wc -l
 # 24
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `L32`-`L38`
 - Copy/paste from **Supplementary Material Page 7: Supplementary Results, Description of *PRDM9* Alleles and Novel ZnF Types** to `copy-paste-files/hussin-2013-allele-copy.txt`
 - Tidy file: `intermediate-files/hussin-2013-allele-znf-content.tsv`
@@ -402,7 +402,7 @@ Allele znf content:
 sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt | sort -k1,1V | grep . > intermediate-files/hussin-2013-allele-znf-content.tsv
 ```
 
-Allele DNA sequence accession numbers:
+**Allele DNA sequence accession numbers**:
 - Save accession numbers to: `genbank-records/hussin-2013-allele-sequence-accessions.txt`
 ```
 # generate sequence of numbers representing genbank accession numbers
@@ -419,7 +419,7 @@ done
 **PMID: [33972781](https://pubmed.ncbi.nlm.nih.gov/33972781)**\
 **GenBank Accession Numbers: None**
 
-Allele structural variants:
+**Allele structural variants**:
 - Includes SVs `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
   - `chr5:23526974:XN.5` has no alternate allele and is therefore the reference sequence
 - Download SV vcf from **[github](https://github.com/DecodeGenetics/LRS_SV_sets/raw/master/ont_sv_high_confidence_SVs.sorted.vcf.gz)** to: `copy-paste-files/beyter-2021-allele-SVs-copy.vcf`
@@ -433,7 +433,7 @@ tabix copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz
 tabix -h copy-paste-files/beyter-2021-allele-SVs-copy.vcf.gz chr5:23526673-23527764 > intermediate-files/beyter-2021-allele-SVs.vcf
 ```
 
-Allele DNA sequences:
+**Allele DNA sequences**:
 - Includes alleles `chr5:23526974:DN.1`, `chr5:23526974:DN.2`, `chr5:23526974:DN.4`, `chr5:23526974:XN.5`, `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, `chr5:23527530:FN.4`
 - Modify reference sequence to replace reference sequences with alternate SV sequences from `intermediate-files/beyter-2021-allele-SVs.vcf`
 - Tidy file: `intermediate-files/beyter-2021-allele-sequences.tsv`
@@ -460,7 +460,7 @@ done < <(grep -v "#" intermediate-files/beyter-2021-allele-SVs.vcf)
 **PMID: [34257419](https://pubmed.ncbi.nlm.nih.gov/34257419)**\
 **GenBank Accession Numbers: None**
 
-Allele mutations:
+**Allele mutations**:
 - Includes point mutations `c.229C>T:p.Arg77*`, `c.638T>G:p.Ile213Ser`, `c.677A>T:p.Lys226Met` relative to allele B (NM_020227.3)
 - Copy/paste from **Table 1** to: `copy-paste-files/wang-2021-allele-mutations-copy.txt`
   - Only copy/pasted from `Patient number` to `E2,pg/mL` for patients 1-4 due to merged cells in publication table
@@ -470,7 +470,7 @@ Allele mutations:
 cut -f3 copy-paste-files/wang-2021-allele-mutations-copy.txt  | sed 's/\s//' | uniq | awk -F: '{print $0 "\t" substr($0, 3,3 ) "\t" substr($0, 6, 1) "\t" substr($0, 8, 1)}' > intermediate-files/wang-2021-allele-mutations.tsv
 ```
 
-Reference allele:
+**Reference allele**:
 - Above point mutations relative to allele B ([NM_020227.3](https://ncbi.nlm.nih.gov/nucore/NM_020227.3))
 - Copy/paste NCBI fasta record to: `copy-paste-files/NM_020227.3-copy.txt`
 - Tidy file: `intermediate-files/NM_020227.3.fa`
@@ -488,7 +488,7 @@ echo $ZNFSTART
 # mutations observed in wang 2021 do not occur in the zinc finger domain (instead occur between base 229-638); these sequences can be ignored
 ```
 
-Allele sequences:
+**Allele sequences**:
 - Since the mutations occur before the zinc finger region, the alleles observed in this study are all reference alleles
 
 
@@ -499,7 +499,7 @@ Allele sequences:
 **PMID: [34805134](https://pubmed.ncbi.nlm.nih.gov/34805134)**\
 **GenBank Accession Numbers: None**
 
-Znf DNA sequences:
+**Znf DNA sequences**:
 - Includes `!A`-`!N`, `:A`-`:V`, `|1`-`|9`, `|A`-`|J`, `|a`-`|j`
 - Save **Supplementary Data File 2** to: `copy-paste-files/alleva-2021-SD2-znf-copy.tsv`
 - Tidy file: `intermediate-files/alleva-2021-znf-sequences.tsv`
@@ -514,7 +514,7 @@ cut -f2 intermediate-files/alleva-2021-znf-sequences.tsv | sort | uniq | wc -l
 # 81
 ```
 
-Znf amino acid sequences:
+**Znf amino acid sequences**:
 - Includes `!A`-`!N`, `:A`-`:V`, `|1`-`|9`, `|A`-`|J`, `|a`-`|j`
 - From the same **Supplementary Data File 2** for znf DNA sequences: `copy-paste-files/alleva-2021-SD2-znf-copy.tsv`
 - Tidy file: `intermediate-files/alleva-2021-znf-aminos.tsv`
@@ -523,7 +523,7 @@ Znf amino acid sequences:
 grep "TGT" copy-paste-files/alleva-2021-SD2-znf-copy.tsv | cut -f1,5 > intermediate-files/alleva-2021-znf-aminos.tsv
 ```
 
-Allele znf content:
+**Allele znf content**:
 - Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
   - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
 - Save **Supplementary Data File 3** to: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
@@ -533,7 +533,7 @@ Allele znf content:
 grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,3 > intermediate-files/alleva-2021-allele-znf-content.tsv
 ```
 
-Allele DNA sequences:
+**Allele DNA sequences**:
 - Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
   - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
 - From the same **Supplementary Data File 3** for allele znf content: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
