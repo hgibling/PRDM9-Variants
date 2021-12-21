@@ -124,15 +124,37 @@ missing <- genbank.seqs %>%
   mutate(ZnfLength=nchar(ZnfContent)) %>%
   left_join(pub.accessions)
 
-znf.length <- missing %>%
-  ungroup() %>%
-  filter(ZnfLength==84)
+# all non-84bp znfs are from Parvanov
+# some are longer and can be split
 
-novel.znf <- znf.length %>%
-  select(ZnfContent) %>%
-  distinct() %>%
-  # add standardized name, continuing after last one: Z038
-  mutate(StandardName=paste0("Z", str_pad(row_number()+38, 3, pad="0")), .before=1)
-```
+check.znf <- missing %>%
+  filter(ZnfLength!=84) %>%
+  mutate(ZnfContent=ifelse(ZnfLength>84, gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  # adjust znf position for split sequences and subsequent znfs
+  mutate(ZnfPosition=ifelse(duplicated(Accession), ZnfPosition+1, ZnfPosition),
+         ZnfLength=nchar(ZnfContent))
 
-#TODO: check what kind of sample each publication used
+# add 84bp sequences to current list
+novel.znf <- known.znfs %>%
+  filter(grepl("Z", StandardName)) %>%
+  full_join(missing %>%
+              ungroup() %>%
+              filter(ZnfLength==84) %>%
+              select(ZnfContent) %>%
+              distinct(), by=c("Sequence"="ZnfContent")) %>%
+  # add standardized name
+  mutate(StandardName=ifelse(is.na(StandardName), 
+                             paste0("Z", str_pad(row_number(), 3, pad="0")), 
+                             StandardName), .before=1)
+
+parvanov.znf.aminos <- read.table("intermediate-files/parvanov-2010-allele-aminos.tsv", 
+                         header=F, col.names=c("Allele", "Amino"))
+
+parv <- parvanov.znf.aminos %>%
+  mutate(Amino=gsub("(.{28})", "\\1_\\2", Amino)) %>%
+  mutate(Amino=sub("_$", "", Amino)) %>%
+  separate_rows(Amino, sep="_") %>%
+  group_by(Allele) %>%
+  mutate(ZnfPosition=row_number())
+---
