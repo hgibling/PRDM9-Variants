@@ -1,5 +1,5 @@
-# Collect known _PRDM9_ alleles and associated zinc fingers (znfs) from publications
-Literature searches revealed several publications that describe znf DNA sequences, znf amino acid sequences, allele znf content, allele DNA sequences and/or their accession numbers, allele mutations, and/or allele structural variants (SVs):
+# Collect known _PRDM9_ alleles and associated zinc fingers from publications
+Literature searches revealed several publications that describe zinc finger (znf) DNA sequences, znf amino acid sequences, allele znf content, allele DNA sequences and/or their accession numbers, allele mutations, and/or allele structural variants (SVs):
 - [Oliver 2009](#oliver-et-al-dec-2009)
   - Znf DNA sequences
   - Allele DNA sequence accession numbers
