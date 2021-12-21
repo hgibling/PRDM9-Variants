@@ -7,6 +7,7 @@ Literature searches revealed several publications that describe znf DNA sequence
   - Znf DNA sequences
 - [Parvanov 2010](#parvanov-et-al-feb-2010)
   - Allele DNA sequence accession numbers
+  - Allele amino acid sequences
 - [Baudat 2010](#baudat-et-al-feb-2010)
   - Allele znf content
   - Allele DNA sequence accession numbers
@@ -50,6 +51,7 @@ When possible, sequences were copy/pasted from publications and saved as `firsta
 - `allele-sequence-accessions`
 - `allele-sequences`
 - `allele-mutations`
+- `allele-aminos`
 
 Genbank accession downloads are described in [additional documentation](/collect-known-alleles-genbank.md).
 
@@ -131,6 +133,23 @@ for i in $(seq 183914 183919)
 do
 echo "GU$i.1" >> genbank-records/parvanov-2010-allele-sequence-accessions.txt
 done
+```
+
+Allele amino acid sequences:
+- Includes alleles `AA1`-`AA11`, `CH1`-`CH3`, `M1`, `M2`
+- Copy/paste from **Supplementary Figure S3A** to: `copy-paste-files/parvanov-2010-allele-aminos.txt`
+  - Moved blocks to one-per-column and put names on top in this file for easier tidying
+- Tidy file: `intermediate-files/parvanov-2010-allele-aminos.tsv`
+```
+# remove extra white space, separate columns, save to temp file
+sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | egrep "\t[A-Z]" | cut -f2 > intermediate-files/parvanov-2010-aminos-TEMP.txt
+sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | cut -f1 >> intermediate-files/parvanov-2010-aminos-TEMP.txt
+
+# put sequences on one line, move name to beginning, remove aminos before start (CGR) & after end (CRE), sort
+awk '/\*/ {printf("%s,", $0); next}1' intermediate-files/parvanov-2010-aminos-TEMP.txt| tr -d '\n' | sed 's/)/)\n/g' | awk -F "," '{print $2 "\t" $1}' | sed -e 's/\tLYV/\t/' -e 's/DE\*$//' -e 's/ (.*)\t/\t/' | sort -k1,1V > intermediate-files/parvanov-2010-aminos.tsv
+
+# remove temp file
+rm intermediate-files/parvanov-2010-aminos-TEMP.txt
 ```
 
 #
