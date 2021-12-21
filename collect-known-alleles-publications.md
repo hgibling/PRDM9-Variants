@@ -142,14 +142,11 @@ done
 - Tidy file: `intermediate-files/parvanov-2010-allele-aminos.tsv`
 ```
 # remove extra white space, separate columns, save to temp file
-sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | egrep "\t[A-Z]" | cut -f2 > intermediate-files/parvanov-2010-aminos-TEMP.txt
-sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | cut -f1 >> intermediate-files/parvanov-2010-aminos-TEMP.txt
+sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | egrep "\t[A-Z]" | cut -f2 > intermediate-files/parvanov-2010-allele-aminos-temp.txt
+sed 's/^[ \t]*//;s/[ \t]*$//' copy-paste-files/parvanov-2010-aminos.txt | sed -e '/\* [A-Z]/ s/\* /\*\t/' -e '/) [A-Z]/ s/) /)\t/' -e 's/K /K\t/' | cut -f1 >> intermediate-files/parvanov-2010-allele-aminos-temp.txt
 
-# put sequences on one line, move name to beginning, remove aminos before start (CGR) & after end (CRE), sort
-awk '/\*/ {printf("%s,", $0); next}1' intermediate-files/parvanov-2010-aminos-TEMP.txt| tr -d '\n' | sed 's/)/)\n/g' | awk -F "," '{print $2 "\t" $1}' | sed -e 's/\tLYV/\t/' -e 's/DE\*$//' -e 's/ (.*)\t/\t/' | sort -k1,1V > intermediate-files/parvanov-2010-aminos.tsv
-
-# remove temp file
-rm intermediate-files/parvanov-2010-aminos-TEMP.txt
+# put sequences on one line, move name to beginning, remove aminos before start (LYV before CGR) & after end (CREDE* after PYV), sort
+awk '/\*/ {printf("%s,", $0); next}1' intermediate-files/parvanov-2010-allele-aminos-temp.txt| tr -d '\n' | sed 's/)/)\n/g' | awk -F "," '{print $2 "\t" $1}' | sed -e 's/\tLYV/\t/' -e 's/CREDE\*$//' -e 's/ (.*)\t/\t/' | sort -k1,1V > intermediate-files/parvanov-2010-allele-aminos.tsv
 ```
 
 #
