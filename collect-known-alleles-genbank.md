@@ -223,28 +223,54 @@ Z010.seq <- known.znfs %>%
   select(Sequence)
 
 znfs.non.84bp.fixed <- znfs.non.84bp %>%
-  mutate(Sequence=unlist(Z010.seq),
-         ZnfContent="Z010") %>%
-  select(-ZnfLength)
+  mutate(ZnfContent="Z010", ZnfLength=84) %>%
+  select(-Publication)
+
+genbank.partial.fixed <- genbank.partial %>%
+  # remove non-84bp to replace
+  filter(ZnfLength==84) %>%
+  bind_rows(znfs.non.84bp.fixed) %>%
+  arrange(Accession, ZnfPosition)
 
 # create names for novel znfs
-genbank.novel.znfs <- genbank.partial %>%
-  # create new column for sequences
-  mutate(Sequence=ifelse(grepl("Z", ZnfContent, ignore.case=T), NA, ZnfContent)) %>%
-  mutate(ZnfContent=ifelse(grepl("Z", ZnfContent, ignore.case=T), ZnfContent, NA))
-  full_join(znfs.non.84bp.fixed)
+known.znfs.updated <- known.znfs %>%
+  filter(grepl("Z", StandardName)) %>%
+  bind_rows(genbank.partial.fixed %>%
+  filter(grepl("[ACGT]", ZnfContent)) %>%
+    ungroup() %>%
+    select(ZnfContent) %>%
+    rename(Sequence=ZnfContent)) %>%
+  distinct() %>%
+  mutate(StandardName=ifelse(is.na(StandardName),
+                             paste0("Z", str_pad(row_number(), 3, pad="0")),
+                             StandardName))
 
 # update genbank allele znf content
+genbank.seqs.updated <- genbank.partial.fixed %>%
+  filter(grepl("[ACGT]", ZnfContent)) %>%
+  rename(Sequence=ZnfContent) %>%
+  left_join(known.znf.updated) %>%
+  select(-Sequence) %>%
+  bind_rows(genbank.partial.fixed %>%
+              filter(!grepl("[ACGT]", ZnfContent)) %>%
+              rename(StandardName=ZnfContent)) %>%
+  arrange(Accession, ZnfPosition) %>%
+  select(-ZnfLength) %>%
+  # collapse individual znfs into znf content sequence
+  summarize(ZnfContent=paste0(StandardName, collapse="_")) %>%
+  # add known genbank sequences
+  bind_rows(genbank.seqs %>%
+              filter(!grepl("[ACGT]", ZnfContent))) %>%
+  arrange(Accession)
 
-  # TODO: TIDY
-missing %>%
-  mutate(Split=ifelse(ZnfLength>84, T, F)) %>%
-  mutate(ZnfContent=ifelse(ZnfLength>84, 
-                           gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), 
-                           ZnfContent)) %>%
-  separate_rows(ZnfContent, sep="_") %>%
-  mutate(NewZnfLength=nchar(ZnfContent)) %>%
-  # adjust znf position for split sequences and subsequent znfs
-  mutate(ZnfPosition=ifelse(duplicated(Accession) & Split==T, ZnfPosition+1, ZnfPosition),
-         ZnfLength=nchar(ZnfContent))
+# save to file
+write.table(genbank.seqs.updated, 
+            "genbank-records/PRDM9-allele-znf-content.tsv",
+            row.names=F, quote=F, sep="\t")
+
+write.table(bind_rows(known.znf.updated, 
+                      known.znfs %>%
+                        filter(grepl("z", StandardName))), 
+            "intermediate-files/standardized-znf-sequences.tsv",
+            row.names=F, quote=F, sep="\t", col.names=F)
 ```
