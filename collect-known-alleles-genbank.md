@@ -51,9 +51,9 @@ sed -i '' "s/$SEQUENCE/$ZNF\_/g" genbank-records/PRDM9-complete-record-temp.tsv
 done < intermediate-files/standardized-znf-sequences.tsv
 
 # remove leading and trailing sequences
-# all alleles start with ZN001
+# all alleles start with Z001
 # last part of exon 11 after the last znf is GATGAGTAA; some records only have GATGAG trailing, some have more
-sed -i '' -e 's/\t[ACGT]*ZN001/\tZN001/' -e 's/GATGAG\(TAA\)*.*$//' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/' -e 's/_$//' genbank-records/PRDM9-complete-record-temp.tsv
+sed -i '' -e 's/\t[ACGT]*Z001/\tZ001/' -e 's/GATGAG\(TAA\)*.*$//' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/g' -e 's/_$//' genbank-records/PRDM9-complete-record-temp.tsv
 ```
 
 ## Look into sequences without known znfs
