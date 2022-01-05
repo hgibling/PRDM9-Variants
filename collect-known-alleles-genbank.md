@@ -66,7 +66,7 @@ library(dplyr)
 genbank.seqs <- read.table("genbank-records/PRDM9-complete-record-temp.tsv", 
                                         header=F, col.names=c("Accession", "ZnfContent"))
 
-genbank.seqs %>%
+genbank.unknown <- genbank.seqs %>%
   filter(!grepl("z", ZnfContent, ignore.case=T)) %>%
   # check length, potential number of znfs (84bp)
   mutate(ZnfLength=nchar(ZnfContent)) %>%
@@ -87,7 +87,7 @@ as_tibble(unknown)
 # 5 MW814871… GTAAGTGACACTTTTGGCCA…       208  2.48  FALSE FALSE TRUE       FALSE   
 # 6 MW814872… ATTGTGAGATGTGTCAGAAC…       272  3.24  FALSE FALSE TRUE       TRUE    
 
-genbank.seqs %>%
+genbank.unknown %>%
   # try splitting between start and stop motifs
   mutate(ZnfContent=gsub("GAGTGT", "GAG_TGT", ZnfContent)) %>%
   filter(grepl("_", ZnfContent))
@@ -98,63 +98,153 @@ These are short fragments not long enough to be full znf regions
 - `MW814869.1`, `MW814870.1` are intron 1 (GenBank)
 - `MW814871.1` is intron 7
 - `LP837495.1`, `MW814872.1` don't seem to be within the znf region at all
+Ignore these sequences for further analyses
 
 ## Look into sequences with some known znfs, some unknown sequences
 ```
 # done in R
 
-library(tidyr)
-library(dplyr)
-library(stringr)
-
-genbank.seqs <- read.table("genbank-records/PRDM9-complete-record-temp.tsv", 
-                            header=F, col.names=c("Accession", "ZnfContent"))
-pub.accessions <- read.table("genbank-records/publication-accessions.txt",
-                            header=F, col.names=c("Publication", "Accession"))
-
-missing <- genbank.seqs %>%
-  # remove fully known or fully unknown sequences
+# look alleles with some unknown znfs
+genbank.partial <- genbank.seqs %>%
+  # remove fully unknown sequences
   filter(grepl("z", ZnfContent, ignore.case=T)) %>%
+  # remove fully known sequences
   filter(grepl("[ACGT]", ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
-  group_by(Accession) %>%
-  mutate(ZnfPosition=row_number()) %>%
-  filter(!grepl("z", ZnfContent, ignore.case=T)) %>%
-  # check length of unknown sequences
-  mutate(ZnfLength=nchar(ZnfContent)) %>%
-  left_join(pub.accessions)
-
-# all non-84bp znfs are from Parvanov
-# some are longer and can be split
-
-check.znf <- missing %>%
-  filter(ZnfLength!=84) %>%
-  mutate(ZnfContent=ifelse(ZnfLength>84, gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), ZnfContent)) %>%
+  # split znfs longer than 84bp
+  mutate(ZnfContent=ifelse(nchar(ZnfContent)>84, 
+                           gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), 
+                           ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
-  # adjust znf position for split sequences and subsequent znfs
-  mutate(ZnfPosition=ifelse(duplicated(Accession), ZnfPosition+1, ZnfPosition),
-         ZnfLength=nchar(ZnfContent))
+  mutate(ZnfLength=ifelse(grepl("z", ZnfContent, ignore.case=T), 
+                          84, nchar(ZnfContent))) %>%
+  # give positional ID for each znf
+  group_by(Accession) %>%
+  mutate(ZnfPosition=row_number())
 
-# add 84bp sequences to current list
-novel.znf <- known.znfs %>%
-  filter(grepl("Z", StandardName)) %>%
-  full_join(missing %>%
-              ungroup() %>%
-              filter(ZnfLength==84) %>%
-              select(ZnfContent) %>%
-              distinct(), by=c("Sequence"="ZnfContent")) %>%
-  # add standardized name
-  mutate(StandardName=ifelse(is.na(StandardName), 
-                             paste0("Z", str_pad(row_number(), 3, pad="0")), 
-                             StandardName), .before=1)
+# look into non-84bp znfs
+znfs.non.84bp <- genbank.partial %>%
+  filter(ZnfLength!=84) %>%
+  left_join(pub.accessions)
+  # all are from parvanov
 
-parvanov.znf.aminos <- read.table("intermediate-files/parvanov-2010-allele-aminos.tsv", 
-                         header=F, col.names=c("Allele", "Amino"))
+# compare to parvanov amino acid seqs
+parvanov.allele.aminos <- read.table("intermediate-files/parvanov-2010-allele-aminos.tsv", 
+                                  header=F, col.names=c("Allele", "Amino"))
 
-parv <- parvanov.znf.aminos %>%
+parvanov.znf.aminos <- parvanov.allele.aminos %>%
   mutate(Amino=gsub("(.{28})", "\\1_\\2", Amino)) %>%
   mutate(Amino=sub("_$", "", Amino)) %>%
   separate_rows(Amino, sep="_") %>%
   group_by(Allele) %>%
-  mutate(ZnfPosition=row_number())
----
+  mutate(ZnfPosition=row_number()) %>%
+  mutate(ZnfLength=max(ZnfPosition))
+
+# check if amino sequences match
+# copied from https://teaching.healthtech.dtu.dk/22110/index.php/Codon_list
+aa.codons <- data.frame(
+  stringsAsFactors = FALSE,
+  Amino.Acid = c("Isoleucine","Leucine",
+                 "Valine","Phenylalanine","Methionine","Cysteine",
+                 "Alanine","Glycine","Proline","Threonine","Serine",
+                 "Tyrosine","Tryptophan","Glutamine","Asparagine",
+                 "Histidine","Glutamic acid","Aspartic acid","Lysine",
+                 "Arginine","Stop codons"),
+  SLC = c("I","L","V","F","M","C","A","G","P","T","S","Y",
+          "W","Q","N","H","E","D","K","R","Stop"),
+  DNA.codons = c("ATT, ATC, ATA","CTT, CTC, CTA, CTG, TTA, TTG",
+                 "GTT, GTC, GTA, GTG","TTT, TTC","ATG","TGT, TGC",
+                 "GCT, GCC, GCA, GCG","GGT, GGC, GGA, GGG",
+                 "CCT, CCC, CCA, CCG","ACT, ACC, ACA, ACG",
+                 "TCT, TCC, TCA, TCG, AGT, AGC","TAT, TAC","TGG",
+                 "CAA, CAG","AAT, AAC","CAT, CAC","GAA, GAG",
+                 "GAT, GAC","AAA, AAG","CGT, CGC, CGA, CGG, AGA, AGG",
+                 "TAA, TAG, TGA")) %>%
+  separate_rows(DNA.codons, sep=", ") %>%
+  select(DNA.codons, SLC) %>%
+  arrange(DNA.codons)
+
+# convert known znf DNA sequences to amino sequences
+known.znf.aminos <- known.znfs %>%
+  mutate(Sequence=gsub("(.{3})", "\\1_\\2", Sequence)) %>%
+  mutate(Sequence=sub("_$", "", Sequence)) %>%
+  separate_rows(Sequence, sep="_") %>%
+  left_join(aa.codons, by=c("Sequence"="DNA.codons")) %>%
+  select(-Sequence) %>%
+  group_by(StandardName) %>%
+  summarize(Amino=paste0(SLC, collapse=""))
+
+# convert non-84bp znfs to amino acid sequences
+znfs.non.84bp.amino <- znfs.non.84bp %>%
+  # split into codons
+  mutate(ZnfContent=gsub("(.{3})", "\\1_\\2", ZnfContent)) %>%
+  mutate(ZnfContent=sub("_$", "", ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  left_join(aa.codons, by=c("ZnfContent"="DNA.codons")) %>%
+  # if no AA, put lowercase nucs in place
+  mutate(SLC=ifelse(is.na(SLC), tolower(ZnfContent), SLC)) %>%
+  # merge amino sequence for each znf
+  group_by(Accession, ZnfPosition) %>%
+  summarize(SLC=paste0(SLC, collapse="")) %>%
+  # move extra nucs to new column
+  mutate(SLC=gsub("([A-Z])([a-z])", "\\1_\\2", SLC)) %>%
+  separate(SLC, c("SLC","Extra"), sep="_")
+  # first 5 are the same
+
+# 56bp
+parvanov.znf.aminos %>% filter(grepl("CGRGFSDRSSLCYHQRTH", Amino)) %>%
+  mutate(Last=(ZnfPosition == ZnfLength))
+  # occurs in 15/16 alleles, always the last znf
+  # all the same sequence
+  # likely the genbank sequence was truncated in znf Z010 (j)
+known.znf.aminos %>% filter(grepl("CGRGFSDRSSLCYHQRTH", Amino))
+# three possible znfs
+# most likely Z010  (j) since it occurs at the end of alleles and the others have only been observed in sperm/somatic samples
+
+# 85bp
+parvanov.znf.aminos %>% filter(grepl("CGRGFSDRSSLCYHQRTHTRGEALRLQG", Amino))
+# no
+known.znf.aminos %>% filter(grepl("CGRGFSDRSSLCYHQRTHTRGEALRLQG", Amino))
+# no
+# could be simple 1bp insertion that is throwing off the reading frame
+
+# calculate levenshtein distances between 85bp seq and known znf seqs
+known.znfs %>%
+  mutate(LevDistToUnknown=adist(Sequence, "TGTGGGCGGGGCTTTAGCGATAGGTCAAGCCTCTGCTATCACCAGAGGACACACACAAGGGGAGAAGCCCTACGTCTGCAGGGAG")) %>%
+  filter(LevDistToUnknown==min(LevDistToUnknown))
+# unknown is closest to Z010 (j)
+
+# summary: 56bp unknown znf most likely truncated Z010 & 85bp znf most likely Z010 with a 1bp insertion error
+
+
+# update list of non-84bp znfs with sequence for Z010
+Z010.seq <- known.znfs %>%
+  filter(StandardName=="Z010") %>%
+  select(Sequence)
+
+znfs.non.84bp.fixed <- znfs.non.84bp %>%
+  mutate(Sequence=unlist(Z010.seq),
+         ZnfContent="Z010") %>%
+  select(-ZnfLength)
+
+# create names for novel znfs
+genbank.novel.znfs <- genbank.partial %>%
+  # create new column for sequences
+  mutate(Sequence=ifelse(grepl("Z", ZnfContent, ignore.case=T), NA, ZnfContent)) %>%
+  mutate(ZnfContent=ifelse(grepl("Z", ZnfContent, ignore.case=T), ZnfContent, NA))
+  full_join(znfs.non.84bp.fixed)
+
+# update genbank allele znf content
+
+  # TODO: TIDY
+missing %>%
+  mutate(Split=ifelse(ZnfLength>84, T, F)) %>%
+  mutate(ZnfContent=ifelse(ZnfLength>84, 
+                           gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), 
+                           ZnfContent)) %>%
+  separate_rows(ZnfContent, sep="_") %>%
+  mutate(NewZnfLength=nchar(ZnfContent)) %>%
+  # adjust znf position for split sequences and subsequent znfs
+  mutate(ZnfPosition=ifelse(duplicated(Accession) & Split==T, ZnfPosition+1, ZnfPosition),
+         ZnfLength=nchar(ZnfContent))
+```
