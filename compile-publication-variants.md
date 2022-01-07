@@ -38,10 +38,10 @@ znf.sequences <- pub.znf.seqs %>%
   mutate(InPopulations=ifelse(grepl("\\|", Alleva.2021), F, T), .before=2)
 
 # Save full mapping info
-write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map-step2.tsv", row.names=F, quote=F, sep="\t")
 
 # Save just standard name and sequence
-write.table(znf.sequences %>% select(StandardName, Sequence), "intermediate-files/standardized-znf-sequences.tsv", row.names=F, quote=F, sep="\t", col.names=F)
+write.table(znf.sequences %>% select(StandardName, Sequence), "intermediate-files/standardized-znf-sequences-step2.tsv", row.names=F, quote=F, sep="\t", col.names=F)
 ```
 
 ---
@@ -65,7 +65,7 @@ library(tidyr)
 library(dplyr)
 library(stringr)
 
-pub.znf.map <- read.table("intermediate-files/standardized-znf-sequences-map.tsv", header=T)
+pub.znf.map <- read.table("intermediate-files/standardized-znf-sequences-map-step2.tsv", header=T)
 pub.znf.map.long <- pub.znf.map %>%
   select(-Sequence, -InPopulations) %>%
   pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubZnfName",
@@ -113,10 +113,10 @@ allele.znfs <- pub.allele.znfs %>%
     TRUE ~ F), .before=2)
 
 # Save full mapping info
-write.table(allele.znfs, "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
+write.table(allele.znfs, "intermediate-files/standardized-allele-znf-content-map-step3.tsv", row.names=F, quote=F, sep="\t")
 
 # Save just standardized name and znf content
-write.table(allele.znfs %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t", col.names=F)
+write.table(allele.znfs %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content-step3.tsv", row.names=F, quote=F, sep="\t", col.names=F)
 ```
 
 ---
@@ -133,14 +133,15 @@ done
 
 Replace znf sequences with standardized znf names:
 ```
-cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized.tsv
+cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized-step4.tsv
 
 while read ZNF SEQUENCE
 do
-sed -i "s/$SEQUENCE/$ZNF\_/g" intermediate-files/publication-allele-sequences-standardized.tsv
-done < intermediate-files/standardized-znf-sequences.tsv
+sed -i '' "s/$SEQUENCE/$ZNF\_/g" intermediate-files/publication-allele-sequences-standardized-step4.tsv
+done < intermediate-files/standardized-znf-sequences-step2.tsv
 
-sed -i 's/\_$//' intermediate-files/publication-allele-sequences-standardized.tsv
+# add _ between remaining nucs and named znfs & remove trailing _ after final named znf
+sed -i '' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/g' -e 's/\_$//' intermediate-files/publication-allele-sequences-standardized-step4.tsv
 ```
 
 See if sequences that still have unnamed nucleotide chunks can be separated into 84bp chunks
@@ -150,22 +151,45 @@ See if sequences that still have unnamed nucleotide chunks can be separated into
 library(tidyr)
 library(dplyr)
 
-allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
+allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized-step4.tsv", 
                                         header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+pub.znf.map <- read.table("intermediate-files/standardized-znf-sequences-map-step2.tsv", header=T)
 
 unknown <- allele.seqs.znf.converted %>%
   # get only seqs with nucleotides left
   filter(grepl("[ACGT]", ZnfContent)) %>%
-  mutate(ZnfContent=gsub("([ACGT])(Z)", "\\1_\\2", ZnfContent, ignore.case=T)) %>%
   separate_rows(ZnfContent, sep="_") %>%
   # remove known znfs
   filter(!grepl("Z", ZnfContent)) %>%
   mutate(ZnfLength=nchar(ZnfContent)) %>%
-  # try to split seqs at ending seq for all known znfs
-  mutate(ZnfContent=gsub("CAGGGAG", "CAGGGAG_", ZnfContent)) %>%
+  # try to split seqs at common ending seq
+  mutate(ZnfContent=ifelse(ZnfLength>84, 
+                           gsub("CAGGGAG", "CAGGGAG_", ZnfContent), 
+                           ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
   mutate(ZnfLength=nchar(ZnfContent)) %>%
   filter(ZnfLength!=0)
+  # several nuc chunks do not have expected 84bp length
+
+# one allele has 85bp nuc chunk instead of 84, could be 1bp insertion error
+check.seq <- unknown %>%
+  filter(AlleleName=="chr5:23527530:FN.4") %>%
+  select(ZnfContent) %>%
+  unname()
+
+# calculate levenshtein distances between 85bp seq and known znf seqs
+pub.znf.map %>%
+  select(StandardName, Sequence) %>%
+  mutate(LevDistanceToUnknown=adist(Sequence, check.seq)) %>%
+  filter(LevDistanceToUnknown==min(LevDistanceToUnknown)) %>%
+  as_tibble()
+
+# two possible sequences are only off by 1
+# StandardName Sequence                                  LevDistanceToUnknow…
+# 1 Z006         TGTGGGCGGGGCTTTAGCAATAAGTCACACCTCCTCAGACACCAGA…             1
+# 2 Z048         TGTGGGCGGGGCTTTAGAGATAAGTCACACCTCCTCAGACACCAGA…             1
+
+# too ambiguous to declare, so ignore these three alleles
 ```
 Three sequences from Beyter 2021 have unidentified sequences that don't have the expected lengths of 84bp. 
 Ignore alleles `chr5:23527530:FN.0`, `chr5:23527530:FN.1`, and `chr5:23527530:FN.4` for now.
@@ -178,30 +202,31 @@ library(tidyr)
 library(dplyr)
 library(stringr)
 
-allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized.tsv", 
+allele.seqs.znf.converted <- read.table("intermediate-files/publication-allele-sequences-standardized-step4.tsv", 
                                         header=F, col.names=c("Publication", "AlleleName", "StandardZnfContent"))
-allele.seqs.znf.map <- read.table("intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", 
-                                        header=T)
+allele.znf.map <- read.table("intermediate-files/standardized-allele-znf-content-map-step3.tsv", 
+                                  header=T)
 
 
-allele.seqs <- allele.seqs.znf.converted %>%
+allele.znfs.updated <- allele.seqs.znf.converted %>%
   # remove seqs with nucleotides left
   filter(!grepl("[ACGT]", StandardZnfContent)) %>%
   mutate(Publication=sub("-", ".", Publication)) %>%
+  mutate(Publication=str_to_title(Publication)) %>%
   pivot_wider(names_from=Publication, values_from=AlleleName) %>%
   # join with original list of standardized allele znf content
-  full_join(allele.seqs.znf.map) %>%
-  relocate(StandardName, .before=StandardZnfContent) %>%
-  relocate(beyter.2021, .after=berg.2011) %>%
-  filter(!grepl("p", StandardName)) %>%
+  full_join(allele.znf.map) %>%
   arrange(StandardName) %>%
   # add standardized name to new allele
-  mutate(StandardName=ifelse(is.na(StandardName), paste0("P", str_pad(row_number(), 3, pad="0")), StandardName)) %>%
-  bind_rows(allele.seqs.znf.map %>% filter(grepl("p", StandardName)))
+  mutate(StandardName=ifelse(is.na(StandardName), 
+                             paste0("P", str_pad(row_number(), 3, pad="0")), 
+                             StandardName)) %>%
+  relocate(StandardName, InPopulations, .before=StandardZnfContent) %>%
+  relocate(Beyter.2021, .after=Berg.2011)
 
-# rewrite files
-write.table(allele.seqs %>% filter(!grepl("p", StandardName)), "intermediate-files/standardized-allele-znf-content-map.tsv", row.names=F, quote=F, sep="\t")
-write.table(allele.seqs, "intermediate-files/standardized-allele-znf-content-with-somatic-sperm-map.tsv", row.names=F, quote=F, sep="\t")
+# write updated files
+write.table(allele.znfs.updated, "intermediate-files/standardized-allele-znf-content-map-step4.tsv", row.names=F, quote=F, sep="\t")
 
-write.table(allele.seqs %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content.tsv", row.names=F, quote=F, sep="\t", col.names=F)
+write.table(allele.znfs.updated %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content-step4.tsv", row.names=F, quote=F, sep="\t", col.names=F)
+
 ```
