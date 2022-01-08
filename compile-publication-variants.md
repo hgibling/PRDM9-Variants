@@ -228,5 +228,4 @@ allele.znfs.updated <- allele.seqs.znf.converted %>%
 write.table(allele.znfs.updated, "intermediate-files/standardized-allele-znf-content-map-step4.tsv", row.names=F, quote=F, sep="\t")
 
 write.table(allele.znfs.updated %>% select(StandardName, StandardZnfContent), "intermediate-files/standardized-allele-znf-content-step4.tsv", row.names=F, quote=F, sep="\t", col.names=F)
-
 ```

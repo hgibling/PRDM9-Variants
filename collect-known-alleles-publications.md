@@ -217,6 +217,7 @@ awk '{print $1 "\t" $3}' copy-paste-files/berg-2010-allele-copy.txt | sort -k1,1
 ```
 
 **Allele DNA sequence accession numbers**:
+- Accessions for alleles L1-L24
 - Save accession numbers to: `genbank-records/berg-2010-allele-sequence-accessions.txt`
 ```
 # generate sequence of numbers representing genbank accession numbers
