@@ -375,27 +375,62 @@ unique.accession.seqs <- accession.names %>%
   select(-Accession, -GenBankName)
 
 # check that for alleles described in both publications and GenBank, sequences match
+genbank.authors <- unique(accession.names$Publication)
+pub.authors <- colnames(pub.allele.znfs.map)[grepl("20", colnames(pub.allele.znfs.map))]
+authors.pubs.and.genbank <- genbank.authors[genbank.authors %in% pub.authors]
+
 pub.allele.znfs.map %>%
   pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubAlleleName") %>%
   filter(!is.na(PubAlleleName)) %>%
-  filter(Publication %in% unique(unique.accession.seqs$Publication)) %>%
+  filter(Publication %in% authors.pubs.and.genbank) %>%
   full_join(unique.accession.seqs %>%
-              filter(Publication %in% colnames(pub.allele.znfs.map)[grepl("20", colnames(pub.allele.znfs.map))])) %>%
-  #filter(PubAlleleName!=GenBankAlleleName)
-  mutate(Matches=ifelse(PubAlleleName==GenBankAlleleName, T, F)) %>%
-  filter(!(Matches %in% T))
+              filter(Publication %in% authors.pubs.and.genbank)) %>%
+  filter(!(PubAlleleName==GenBankAlleleName) %in% T)
 
-# StandardName InPopulations StandardZnfContent                              Publication PubAlleleName GenBankAlleleNa… Matches
-# <chr>        <lgl>         <chr>                                           <chr>       <chr>         <chr>            <lgl>  
-# 1 P001         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z007_Z… Berg.2010   A             NA               NA     
-# 2 P002         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z007_Z… Berg.2010   B             NA               NA     
-# 3 P003         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z011_Z… Berg.2010   C             NA               NA     
-# 4 P004         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z011_Z… Berg.2010   D             NA               NA     
-# 5 P005         TRUE          Z001_Z002_Z003_Z004_Z008_Z006_Z009_Z010         Berg.2010   E             NA               NA     
-# 6 P582         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z071_Z007_Z… Hussin.2013 L35           NA               NA     
-# 7 P584         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 L38           NA               NA     
-# 8 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 NA            L38              NA     
-# 9 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z070_Z007_Z… Hussin.2013 NA            L35              NA     
+# StandardName InPopulations StandardZnfContent                              Publication PubAlleleName GenBankAlleleNa…
+# <chr>        <lgl>         <chr>                                           <chr>       <chr>         <chr>
+# 1 P001         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z007_Z… Berg.2010   A             NA  
+# 2 P002         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z007_Z… Berg.2010   B             NA  
+# 3 P003         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z011_Z… Berg.2010   C             NA  
+# 4 P004         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z011_Z… Berg.2010   D             NA  
+# 5 P005         TRUE          Z001_Z002_Z003_Z004_Z008_Z006_Z009_Z010         Berg.2010   E             NA  
+# 6 P582         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z071_Z007_Z… Hussin.2013 L35           NA 
+# 7 P584         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 L38           NA  
+# 8 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 NA            L38 
+# 9 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z070_Z007_Z… Hussin.2013 NA            L35  
 
 # Berg.2010 didn't put alleles A-E in GenBank, so those are ok
+# Hussin.2013 L35 and L38 do not match publication sequences
+# confirmed with Hussin that GenBank sequences are incorrect and publication sequences are correct
+
+# add accession sequences to existing list of alleles
+updated.allele.znf.content.map <- pub.allele.znfs.map %>%
+  select(-StandardName, -InPopulations) %>%
+  pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubAlleleName") %>%
+  filter(!is.na(PubAlleleName)) %>%
+  full_join(unique.accession.seqs %>%
+              # remove incorrect Hussin.2013 alleles
+              filter(!(Publication=="Hussin.2013" & GenBankAlleleName=="L35") & 
+                       !(Publication=="Hussin.2013" & GenBankAlleleName=="L38")), 
+            by=c("StandardZnfContent", "Publication", "PubAlleleName"="GenBankAlleleName")) %>%
+  pivot_wider(names_from=Publication, values_from=PubAlleleName) %>%
+  full_join(pub.allele.znfs.map %>%
+              select(StandardName, InPopulations, StandardZnfContent)) %>%
+  # rearrange columns
+  select(StandardName, InPopulations, StandardZnfContent, 
+         Alleva.2021, Baudat.2010, Berg.2010, Berg.2011, 
+         Beyter.2021, Borel.2012, Hussin.2013, Jeffreys.2013, 
+         Oliver.2009, Parvanov.2010, Ponting.2011, GenBank.2021) %>%
+  # arrange in roughly publication order
+  arrange(StandardName, Parvanov.2010, Baudat.2010, Berg.2010, 
+          Ponting.2011, Berg.2011, Borel.2012, Jeffreys.2013, 
+          Hussin.2013, Beyter.2021, Alleva.2021, GenBank.2021) %>%
+  # name new alleles and assume all are observed in populations
+  mutate(StandardName=ifelse(is.na(StandardName, 
+                                   paste0("P", str_pad(row_number(), 3, pad="0")), 
+                                   StandardName)),
+         InPopulations=ifelse(is.na(InPopulations),
+                              T, InPopulations))
+
+# TODO: update files, check on Borel allele I
 ```
