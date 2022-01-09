@@ -401,7 +401,10 @@ sed -e 's/ is /\t/' -e 's/[,=]/\t/' copy-paste-files/hussin-2013-allele-copy.txt
 ```
 
 **Allele DNA sequence accession numbers**:
+- Accessions for alleles L32-L38
 - Save accession numbers to: `genbank-records/hussin-2013-allele-sequence-accessions.txt`
+- **Znf content from DNA sequences for alleles L35 and L38 _do not_ match content described in publication**
+  - Via email communication with Hussin (Aug 2021), confirmed that the DNA sequences for L35 and L38 deposited in GenBank are **incorrect**
 ```
 # generate sequence of numbers representing genbank accession numbers
 for i in $(seq 44371 44377)
