@@ -37,7 +37,7 @@ done
 # check that all publication accessions are present
 wc -l genbank-records/publication-accessions.txt
 grep -f <(cut -f2 genbank-records/publication-accessions.txt) genbank-records/PRDM9-accessions.txt | wc -l
-# 95 for each
+# 95 for each--all present
 # 33 additional records from genbank search
 ```
 
@@ -51,9 +51,12 @@ sed -i '' "s/$SEQUENCE/$ZNF\_/g" genbank-records/PRDM9-complete-record-standardi
 done < intermediate-files/standardized-znf-sequences-step2.tsv
 
 # remove leading and trailing sequences
-# all alleles start with Z001
+# all alleles start with z001 (a)
 # last part of exon 11 after the last znf is GATGAGTAA; some records only have GATGAG trailing, some have more
-sed -i '' -e 's/\t[ACGT]*Z001/\tZ001/' -e 's/GATGAG\(TAA\)*.*$//' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/g' -e 's/_$//' genbank-records/PRDM9-complete-record-standardized-step6.tsv
+sed -i '' -e 's/\t[ACGT]*z001/\tz001/' -e 's/GATGAG\(TAA\)*.*$//' -e 's/\([ACGT]\)\([Zz]\)/\1_\2/g' -e 's/_$//' genbank-records/PRDM9-complete-record-standardized-step6.tsv
+
+egrep "_[ACGT]" genbank-records/PRDM9-complete-record-standardized-step6.tsv | wc -l
+# 16 entries have unknown zinc fingers/sequence chunks
 ```
 
 ### Look into sequences without any known znfs
@@ -67,7 +70,7 @@ genbank.seqs <- read.table("genbank-records/PRDM9-complete-record-standardized-s
                                         header=F, col.names=c("Accession", "ZnfContent"))
 
 genbank.unknown <- genbank.seqs %>%
-  filter(!grepl("Z", ZnfContent)) %>%
+  filter(!grepl("z", ZnfContent)) %>%
   # check length, potential number of znfs (84bp)
   mutate(ZnfLength=nchar(ZnfContent)) %>%
   mutate(ZnfNum=ZnfLength/84) %>%
@@ -77,7 +80,7 @@ genbank.unknown <- genbank.seqs %>%
          ShortStart=ifelse(grepl("TGT", ZnfContent), T, F),
          ShortEnd=ifelse(grepl("GGAG", ZnfContent), T, F))
   
-as_tibble(unknown)
+as_tibble(genbank.unknown)
 #   Accession ZnfContent            ZnfLength ZnfNum Start End   ShortStart ShortEnd
 #   <chr>     <chr>                     <int>  <dbl> <lgl> <lgl> <lgl>      <lgl>   
 # 1 KT584285… AGGTCTGCAGGGAG               14  0.167 FALSE TRUE  FALSE      TRUE    
@@ -93,7 +96,7 @@ genbank.unknown %>%
   filter(grepl("_", ZnfContent))
   # no sequences
 ```
-These are short fragments not long enough to be full znf regions
+These are short fragments not long enough to be full znf regions:
 - `KT584285.1` appears to be a short fragment at the end of a znf; GenBank listing says 3' UTR
 - `MW814869.1`, `MW814870.1` are intron 1 (as per GenBank; znf region is in intron 11)
 - `MW814871.1` is intron 7 (GenBank)
@@ -118,7 +121,7 @@ known.znfs <- read.table("intermediate-files/standardized-znf-sequences-step2.ts
 # look into alleles with some unknown znfs
 genbank.partial <- genbank.seqs %>%
   # remove fully unknown sequences
-  filter(grepl("Z", ZnfContent)) %>%
+  filter(grepl("z", ZnfContent)) %>%
   # remove fully known sequences
   filter(grepl("[ACGT]", ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
@@ -127,7 +130,7 @@ genbank.partial <- genbank.seqs %>%
                            gsub("CAGGGAGTGT", "CAGGGAG_TGT", ZnfContent), 
                            ZnfContent)) %>%
   separate_rows(ZnfContent, sep="_") %>%
-  mutate(ZnfLength=ifelse(grepl("Z", ZnfContent), 
+  mutate(ZnfLength=ifelse(grepl("z", ZnfContent), 
                           84, nchar(ZnfContent))) %>%
   # give positional ID for each znf
   group_by(Accession) %>%
@@ -137,12 +140,13 @@ genbank.partial <- genbank.seqs %>%
 znfs.non.84bp <- genbank.partial %>%
   filter(ZnfLength!=84) %>%
   left_join(pub.accessions)
-  # all are from parvanov
+# all are from parvanov
 
-# compare to parvanov amino acid seqs
+# since parvanov had full amino acid seqs of the alleles in their publication, see if sequence can be deduced from those
 parvanov.allele.aminos <- read.table("intermediate-files/parvanov-2010-allele-aminos.tsv", 
                                      header=F, col.names=c("Allele", "Amino"))
 
+# compare to parvanov amino acid seqs
 parvanov.znf.aminos <- parvanov.allele.aminos %>%
   # split into znf amino sequences
   mutate(Amino=gsub("(.{28})", "\\1_\\2", Amino)) %>%
@@ -201,9 +205,9 @@ znfs.non.84bp.amino <- znfs.non.84bp %>%
   group_by(Accession, ZnfPosition) %>%
   summarize(SLC=paste0(SLC, collapse="")) %>%
   # move extra nucs to new column
-  mutate(SLC=gsub("([A-Z])([a-z])", "\\1_\\2", SLC)) %>%
+  mutate(SLC=gsub("([A-Z])([acgt])", "\\1_\\2", SLC)) %>%
   separate(SLC, c("SLC","Extra"), sep="_")
-  # first 5 (56bp) are the same
+# first 5 (56bp) are the same
 
 # check if the 56bp fragment occurs in any parvanov alleles
 seq.56 <- znfs.non.84bp.amino %>%
@@ -218,12 +222,12 @@ parvanov.znf.aminos %>% filter(grepl(unlist(seq.56), Amino)) %>%
   mutate(Last=(ZnfPosition == ZnfLength))
 # occurs in 15/16 alleles, always the last znf
 # all the same sequence
-# likely the genbank sequence was truncated in znf Z010 (j)
+# likely the genbank sequence was truncated in znf z010 (j)
 
 # check which znfs the 56bp fragment occurs in 
 known.znf.aminos %>% filter(grepl(unlist(seq.56), Amino))
 # three possible znfs
-# most likely Z010  (j) since it usually occurs at the end of alleles and the others have only been observed in sperm/somatic samples
+# most likely z010  (j) since it usually occurs at the end of alleles and the others have only been observed in sperm/somatic samples
 
 # check if the 85bp fragment occurs in any parvanov alleles
 seq.85 <- znfs.non.84bp.amino %>%
@@ -251,18 +255,13 @@ seq.85.nuc <- znfs.non.84bp %>%
 known.znfs %>%
   mutate(LevDistToUnknown=adist(Sequence, seq.85.nuc)) %>%
   filter(LevDistToUnknown==min(LevDistToUnknown))
-  # unknown is closest to Z010 (j)
+# unknown is closest to z010 (j)
 
-# summary: 56bp unknown znf most likely truncated Z010 & 85bp znf most likely Z010 with a 1bp insertion error
+# summary: 56bp unknown znf most likely truncated z010 & 85bp znf most likely z010 with a 1bp insertion error
 
-# update list of non-84bp znfs with sequence for Z010
-Z010.seq <- known.znfs %>%
-  filter(StandardZnfName=="Z010") %>%
-  select(Sequence) %>%
-  unname()
-
+# update list of non-84bp znfs with sequence for z010
 znfs.non.84bp.fixed <- znfs.non.84bp %>%
-  mutate(ZnfContent="Z010", ZnfLength=84) %>%
+  mutate(ZnfContent="z010", ZnfLength=84) %>%
   select(-Publication)
 
 genbank.partial.fixed <- genbank.partial %>%
@@ -271,7 +270,7 @@ genbank.partial.fixed <- genbank.partial %>%
   bind_rows(znfs.non.84bp.fixed) %>%
   arrange(Accession, ZnfPosition)
 
-# create names for novel znfs
+# create temp standard names for novel znfs
 known.znfs.updated <- known.znfs %>%
   bind_rows(genbank.partial.fixed %>%
               filter(grepl("[ACGT]", ZnfContent)) %>%
@@ -280,8 +279,8 @@ known.znfs.updated <- known.znfs %>%
               rename(Sequence=ZnfContent)) %>%
   distinct() %>%
   mutate(StandardZnfName=ifelse(is.na(StandardZnfName),
-                             paste0("Z", str_pad(row_number(), 3, pad="0")),
-                             StandardZnfName))
+                                paste0("z", str_pad(row_number(), 3, pad="0")),
+                                StandardZnfName))
 
 # update genbank allele znf content
 genbank.seqs.updated <- genbank.partial.fixed %>%
@@ -304,7 +303,7 @@ genbank.seqs.updated <- genbank.partial.fixed %>%
 # save accession znf content to file
 write.table(genbank.seqs.updated, 
             "genbank-records/standardized-allele-znf-content-step7.tsv",
-            row.names=F, quote=F, sep="\t")
+            row.names=F, quote=F, sep="\t", col.names=F)
 
 # update list of znfs
 write.table(known.znfs.updated, 
@@ -326,15 +325,15 @@ genbank.seqs <- read.table("genbank-records/standardized-allele-znf-content-step
 pub.accessions <- read.table("genbank-records/publication-accessions.txt", 
                              header=F, col.names=c("Publication", "Accession"))
 accession.znfs <- read.table("genbank-records/standardized-allele-znf-content-step7.tsv", 
-                              header=F, col.names=c("Accession", "StandardZnfContent"))
+                             header=F, col.names=c("Accession", "StandardZnfContent"))
 # for some reason read.table() messes up the last ~23 lines, so use readr package
 all.accessions <- read_tsv("genbank-records/PRDM9-complete-record.tsv",
-                             col_names=c("Accession", "GenBankName", "Sequence"),
-                             col_types = cols())
+                           col_names=c("Accession", "GenBankName", "Sequence"),
+                           col_types = cols())
 
 pub.allele.znfs.map <- read.table("intermediate-files/standardized-allele-znf-content-map-step4.tsv", header=T)
 pub.znf.seqs <- read.table("intermediate-files/standardized-znf-sequences-step7.tsv",
-                         header=F, col.names=c("StandardZnfName", "Sequence"))
+                           header=F, col.names=c("StandardZnfName", "Sequence"))
 
 accession.names <- accession.znfs %>%
   left_join(pub.accessions) %>%
@@ -361,16 +360,16 @@ unique.accession.seqs <- accession.names %>%
   # give names based on original fasta header
   mutate(Publication=ifelse(is.na(Publication), "GenBank.2021", Publication),
          GenBankAlleleName=case_when(
-    grepl("PRDM9-", GenBankName) ~ sub("PRDM9-", "", 
-                                     str_extract(GenBankName, "PRDM9-[A-Z]*[0-9]*")),
-    # Berg.2010 misspelled PRDM9 in GenBank entries
-    grepl("PRMD9-", GenBankName) ~ sub("PRMD9-", "", 
-                                   str_extract(GenBankName, "PRMD9-[A-Z]*[0-9]*")),
-    grepl("MW", Accession) ~ str_extract(GenBankName, "UP_[0-90]*"),
-    grepl("isolate", GenBankName) ~ str_extract(GenBankName, "isolate [0-9]*[a-z]*"),
-    # only one seq that doesn't have an identifiable name from GenBank, so use accession
-    TRUE ~ Accession
-  )) %>%
+           grepl("PRDM9-", GenBankName) ~ sub("PRDM9-", "", 
+                                              str_extract(GenBankName, "PRDM9-[A-Z]*[0-9]*")),
+           # Berg.2010 misspelled PRDM9 in GenBank entries
+           grepl("PRMD9-", GenBankName) ~ sub("PRMD9-", "", 
+                                              str_extract(GenBankName, "PRMD9-[A-Z]*[0-9]*")),
+           grepl("MW", Accession) ~ sub("_", ".", str_extract(GenBankName, "UP_[0-90]*")),
+           grepl("isolate", GenBankName) ~ sub(" ", ".", str_extract(GenBankName, "isolate [0-9]*[a-z]*")),
+           # only one seq that doesn't have an identifiable name from GenBank, so use accession
+           TRUE ~ Accession
+         )) %>%
   arrange(Publication) %>%
   select(-Accession, -GenBankName)
 
@@ -387,17 +386,17 @@ pub.allele.znfs.map %>%
               filter(Publication %in% authors.pubs.and.genbank)) %>%
   filter(!(PubAlleleName==GenBankAlleleName) %in% T)
 
-# StandardName InPopulations StandardZnfContent                              Publication PubAlleleName GenBankAlleleNa…
-# <chr>        <lgl>         <chr>                                           <chr>       <chr>         <chr>
-# 1 P001         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z007_Z… Berg.2010   A             NA  
-# 2 P002         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z007_Z… Berg.2010   B             NA  
-# 3 P003         TRUE          Z001_Z002_Z003_Z004_Z004_Z003_Z003_Z006_Z011_Z… Berg.2010   C             NA  
-# 4 P004         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z006_Z011_Z… Berg.2010   D             NA  
-# 5 P005         TRUE          Z001_Z002_Z003_Z004_Z008_Z006_Z009_Z010         Berg.2010   E             NA  
-# 6 P582         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z071_Z007_Z… Hussin.2013 L35           NA 
-# 7 P584         TRUE          Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 L38           NA  
-# 8 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z068_Z007_Z… Hussin.2013 NA            L38 
-# 9 NA           NA            Z001_Z002_Z003_Z004_Z004_Z005_Z003_Z070_Z007_Z… Hussin.2013 NA            L35  
+# StandardName   StandardZnfContent                              Publication PubAlleleName GenBankAlleleNa…
+# <chr>          <chr>                                           <chr>       <chr>         <chr>
+# 1 p001         z001_z002_z003_z004_z004_z005_z003_z006_z007_z… Berg.2010   A             NA              
+# 2 p002         z001_z002_z003_z004_z004_z003_z003_z006_z007_z… Berg.2010   B             NA              
+# 3 p003         z001_z002_z003_z004_z004_z003_z003_z006_z011_z… Berg.2010   C             NA              
+# 4 p004         z001_z002_z003_z004_z004_z005_z003_z006_z011_z… Berg.2010   D             NA              
+# 5 p005         z001_z002_z003_z004_z008_z006_z009_z010         Berg.2010   E             NA              
+# 6 p582         z001_z002_z003_z004_z004_z005_z003_z071_z007_z… Hussin.2013 L35           NA              
+# 7 p584         z001_z002_z003_z004_z004_z005_z003_z068_z007_z… Hussin.2013 L38           NA              
+# 8 NA           z001_z002_z003_z004_z004_z005_z003_z068_z007_z… Hussin.2013 NA            L38             
+# 9 NA           z001_z002_z003_z004_z004_z005_z003_z070_z007_z… Hussin.2013 NA            L35       
 
 # Berg.2010 didn't put alleles A-E in GenBank, so those are ok
 # Hussin.2013 L35 and L38 do not match publication sequences
@@ -405,7 +404,7 @@ pub.allele.znfs.map %>%
 
 # add accession sequences to existing list of alleles
 updated.allele.znf.content.map <- pub.allele.znfs.map %>%
-  select(-StandardName, -InPopulations) %>%
+  select(-StandardName) %>%
   pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubAlleleName") %>%
   filter(!is.na(PubAlleleName)) %>%
   full_join(unique.accession.seqs %>%
@@ -415,9 +414,9 @@ updated.allele.znf.content.map <- pub.allele.znfs.map %>%
             by=c("StandardZnfContent", "Publication", "PubAlleleName"="GenBankAlleleName")) %>%
   pivot_wider(names_from=Publication, values_from=PubAlleleName) %>%
   full_join(pub.allele.znfs.map %>%
-              select(StandardName, InPopulations, StandardZnfContent)) %>%
+              select(StandardName, StandardZnfContent)) %>%
   # rearrange columns
-  select(StandardName, InPopulations, StandardZnfContent, 
+  select(StandardName, StandardZnfContent, 
          Alleva.2021, Baudat.2010, Berg.2010, Berg.2011, 
          Beyter.2021, Borel.2012, Hussin.2013, Jeffreys.2013, 
          Oliver.2009, Parvanov.2010, Ponting.2011, GenBank.2021) %>%
@@ -426,11 +425,18 @@ updated.allele.znf.content.map <- pub.allele.znfs.map %>%
           Ponting.2011, Berg.2011, Borel.2012, Jeffreys.2013, 
           Hussin.2013, Beyter.2021, Alleva.2021, GenBank.2021) %>%
   # name new alleles and assume all are observed in populations
-  mutate(StandardName=ifelse(is.na(StandardName, 
-                                   paste0("P", str_pad(row_number(), 3, pad="0")), 
-                                   StandardName)),
-         InPopulations=ifelse(is.na(InPopulations),
-                              T, InPopulations))
+  mutate(StandardName=ifelse(is.na(StandardName), 
+                                   paste0("p", str_pad(row_number(), 3, pad="0")), 
+                                   StandardName))
 
-# TODO: update files, check on Borel allele I
+# update list of alleles
+write.table(updated.allele.znf.content.map, 
+            "intermediate-files/standardized-allele-znf-content-map-step8.tsv",
+            row.names=F, quote=F, sep="\t")
+```
+
+## Step 9. Determine sequence of Baudat allele K given sequences for other alleles in GenBank
+Baudat depicted allele K in their publication figure, but did not submit a sequence for it in GenBank.
+```
+# done in R
 ```
