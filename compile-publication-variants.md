@@ -1,4 +1,4 @@
-## Step 2. Compile znf sequences, get list of unique znfs, and give them standardized names
+## Step 2. Compile znf sequences, get list of unique znfs, and give them temporary standardized names
 Append author & year to each znf name and save in new file:
 ```
 for FILE in intermediate-files/*znf-sequences*
@@ -32,10 +32,8 @@ znf.sequences <- pub.znf.seqs %>%
   pivot_wider(names_from=Publication, values_from=ZnfName) %>%
   # arrange in publication order (not including Oliver, since Berg is better known)
   arrange(Berg.2010, Berg.2011, Borel.2012, Jeffreys.2013, Hussin.2013, Alleva.2021) %>%
-  # give standard names
-  mutate(StandardName=paste0("Z", str_pad(row_number(), 3, pad="0")), .before=1) %>%
-  # indicate if znf only observed in sperm/blood (starts with '|' in alleva)
-  mutate(InPopulations=ifelse(grepl("\\|", Alleva.2021), F, T), .before=2)
+  # give temp standard names
+  mutate(StandardName=paste0("z", str_pad(row_number(), 3, pad="0")), .before=1)
 
 # Save full mapping info
 write.table(znf.sequences, "intermediate-files/standardized-znf-sequences-map-step2.tsv", row.names=F, quote=F, sep="\t")
@@ -46,7 +44,7 @@ write.table(znf.sequences %>% select(StandardName, Sequence), "intermediate-file
 
 ---
 
-## Step 3. Compile allele znf content, get list of unique alleles, and give them standardized names
+## Step 3. Compile allele znf content, get list of unique alleles, and give them temporary standardized names
 Append author & year to each allele name and save in new file:
 ```
 # exclude files with unnamed znfs
@@ -66,13 +64,13 @@ library(dplyr)
 library(stringr)
 
 pub.znf.map <- read.table("intermediate-files/standardized-znf-sequences-map-step2.tsv", header=T)
-pub.znf.map.long <- pub.znf.map %>%
-  select(-Sequence, -InPopulations) %>%
-  pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubZnfName",
-               values_drop_na=T)
-
 pub.allele.znfs <- read.table("intermediate-files/publication-allele-znf-content.tsv",
                          header=F, col.names=c("Publication", "AlleleName", "ZnfContent"))
+
+pub.znf.map.long <- pub.znf.map %>%
+  select(-Sequence) %>%
+  pivot_longer(cols=contains("20"), names_to="Publication", values_to="PubZnfName",
+               values_drop_na=T)
 
 # All unique sequences
 allele.znfs <- pub.allele.znfs %>%
@@ -103,14 +101,8 @@ allele.znfs <- pub.allele.znfs %>%
   pivot_wider(names_from=Publication, values_from=AlleleName) %>%
   # sort in publication order
   arrange(Berg.2010, Berg.2011, Ponting.2011, Borel.2012, Jeffreys.2013, Hussin.2013, Alleva.2021) %>%
-  # give standard names
-  mutate(StandardName=paste0("P", str_pad(row_number(), 3, pad="0")), .before=1) %>%
-  # indicate if znf only observed in sperm/blood (only in Jeffreys and Alleva, except Alleva M alleles)
-  mutate(InPopulations=case_when(
-    !is.na(Berg.2010) | !is.na(Berg.2011) | !is.na(Borel.2012) | 
-      !is.na(Hussin.2013) | !is.na(Ponting.2011) ~ T,
-    grepl("M", Alleva.2021) ~ T,
-    TRUE ~ F), .before=2)
+  # give temporary standard names
+  mutate(StandardName=paste0("p", str_pad(row_number(), 3, pad="0")), .before=1)
 
 # Save full mapping info
 write.table(allele.znfs, "intermediate-files/standardized-allele-znf-content-map-step3.tsv", row.names=F, quote=F, sep="\t")
@@ -121,7 +113,7 @@ write.table(allele.znfs %>% select(StandardName, StandardZnfContent), "intermedi
 
 ---
 
-## Step 4. Convert allele DNA sequences to standardized znf names to confirm known alleles and identify ones not in current list
+## Step 4. Convert allele DNA sequences to temporary standardized znf names to confirm known alleles and identify ones not in current list
 Append author & year to each allele name and save in new file:
 ```
 for FILE in intermediate-files/*allele-sequences.tsv
@@ -131,7 +123,7 @@ awk -v NAME="$NAME" '{print NAME "\t" $1 "\t" $2}' $FILE >> intermediate-files/p
 done
 ```
 
-Replace znf sequences with standardized znf names:
+Replace znf sequences with temporary standardized znf names:
 ```
 cp intermediate-files/publication-allele-sequences.tsv intermediate-files/publication-allele-sequences-standardized-step4.tsv
 
@@ -186,8 +178,8 @@ pub.znf.map %>%
 
 # two possible sequences are only off by 1
 # StandardName Sequence                                  LevDistanceToUnknow…
-# 1 Z006         TGTGGGCGGGGCTTTAGCAATAAGTCACACCTCCTCAGACACCAGA…             1
-# 2 Z048         TGTGGGCGGGGCTTTAGAGATAAGTCACACCTCCTCAGACACCAGA…             1
+# 1 z006         TGTGGGCGGGGCTTTAGCAATAAGTCACACCTCCTCAGACACCAGA…             1
+# 2 z048         TGTGGGCGGGGCTTTAGAGATAAGTCACACCTCCTCAGACACCAGA…             1
 
 # too ambiguous to declare, so ignore these three alleles
 ```
@@ -217,11 +209,11 @@ allele.znfs.updated <- allele.seqs.znf.converted %>%
   # join with original list of standardized allele znf content
   full_join(allele.znf.map) %>%
   arrange(StandardName) %>%
-  # add standardized name to new allele
+  # add temp standardized name to new allele
   mutate(StandardName=ifelse(is.na(StandardName), 
                              paste0("P", str_pad(row_number(), 3, pad="0")), 
                              StandardName)) %>%
-  relocate(StandardName, InPopulations, .before=StandardZnfContent) %>%
+  relocate(StandardName, .before=StandardZnfContent) %>%
   relocate(Beyter.2021, .after=Berg.2011)
 
 # write updated files
