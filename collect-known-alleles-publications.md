@@ -244,8 +244,8 @@ done
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Kong-2010-SupFigure4.png?raw=true" width="600">
 
 ```
-# remove gaps, tidy file, remove duplicates, give new allele names
-awk '{print $2}' copy-paste-files/kong-2010-allele-copy.txt | sed -e 's/-\{2,\}/-/g' | grep "-" | sort | uniq | awk '{printf "Decode%02i\t%s\n", NR, $1}' > intermediate-files/kong-2010-allele-znf-content-unnamed.tsv
+# remove gaps, tidy file, give allele names (first 7 are Decode sample, rest are HapMap YRI)
+awk '{print $2}' copy-paste-files/kong-2010-allele-copy.txt | sed -e 's/-\{2,\}/-/g' | grep "-" | sort | uniq | awk '{if (NR<8) printf "Decode%02i\t%s\n", NR, $1; else printf "YRI%02i\t%s\n", NR-7, $1}' > intermediate-files/kong-2010-allele-znf-content-unnamed.tsv
 ```
 
 #
