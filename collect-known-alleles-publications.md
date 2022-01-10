@@ -525,7 +525,7 @@ grep "TGT" copy-paste-files/alleva-2021-SD2-znf-copy.tsv | cut -f1,5 > intermedi
 ```
 
 **Allele znf content**:
-- Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
+- Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L24`, `L27`, `M1`-`M32`
   - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
 - Save **Supplementary Data File 3** to: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
 - Tidy file: `intermediate-files/alleva-2021-allele-znf-content.tsv`
@@ -535,7 +535,7 @@ grep "TGT" copy-paste-files/alleva-2021-SD3-allele-copy.tsv | cut -f2,3 > interm
 ```
 
 **Allele DNA sequences**:
-- Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L27`, `M1`-`M32`
+- Includes alleles `A`-`E`, `F`, `H`-`I`, `L1`-`L24`, `L27`, `M1`-`M32`
   - Also includes 542 additional alleles from [Jeffreys et al. 2013](#jeffreys-et-al-jan-2013) observed in sperm or blood
 - From the same **Supplementary Data File 3** for allele znf content: `copy-paste-files/alleva-2021-SD3-allele-copy.tsv`
 - Tidy file: `intermediate-files/alleva-2021-allele-sequences.tsv`
