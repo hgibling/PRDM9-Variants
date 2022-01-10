@@ -235,7 +235,7 @@ done
 **GenBank Accession Numbers: None**
 
 **Allele znf content**:
-- Includes alleles `Kong01`-`Kong12` (publication did not provide allele names, so name them here)
+- Includes alleles `Decode01`-`Decode12` (publication did not provide allele names, so name them here)
 - Image in **Supplementary Figure 4** depicts znf content as blocks named with the amino acids at repeat positions -1, 3 and 6 of the alpha helix
 - Type znf content typed out by hand, triple check for accuracy, to: `copy-paste-files/kong-2010-allele-copy.txt`
   - Add `-` to separate blocks
@@ -244,7 +244,7 @@ done
 <img src="https://github.com/hgibling/PRDM9-Variants/blob/main/images/Kong-2010-SupFigure4.png?raw=true" width="600">
 
 ```
-# remove gaps, tidy file, give new allele names
+# remove gaps, tidy file, remove duplicates, give new allele names
 awk '{print $2}' copy-paste-files/kong-2010-allele-copy.txt | sed -e 's/-\{2,\}/-/g' | grep "-" | sort | uniq | awk '{printf "Decode%02i\t%s\n", NR, $1}' > intermediate-files/kong-2010-allele-znf-content-unnamed.tsv
 ```
 
