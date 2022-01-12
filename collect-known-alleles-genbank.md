@@ -4,10 +4,12 @@ Many publications describing _PRDM9_ allele sequences submitted those sequences 
 Outline of collection process:
 - Search GenBank for PRDM9 nucleotide sequences
 - Remove flanking sequences and keep only the znf repeat domain
-- Replace DNA sequence with znf-temporary name if there is a match
+- Replace DNA sequence with temporary znf name if there is a match
 - Examine remaining sequences and determine if they represent novel znfs
 - Generate list of all GenBank entries and the allele they represent
-- Determine unique list of alleles and give them allele-temporary names
+- Determine unique list of alleles and give them temporary allele names
+
+---
 
 ## Step 5. Search GenBank for PRDM9 sequences
 Search GenBank for _PRDM9_ nucleotide sequences
@@ -40,6 +42,8 @@ grep -f <(cut -f2 genbank-records/publication-accessions.txt) genbank-records/PR
 # 95 for each--all present
 # 33 additional records from genbank search
 ```
+
+---
 
 ## Step 6. Replace genbank sequences with standardized znf names
 ```
@@ -102,6 +106,8 @@ These are short fragments not long enough to be full znf regions:
 - `MW814871.1` is intron 7 (GenBank)
 - `LP837495.1`, `MW814872.1` don't seem to be within the znf region at all
 Ignore these sequences for further analyses
+
+---
 
 ## Step 7. Look into sequences with some known znfs, some unknown sequences and update list of known znfs
 ```
@@ -310,6 +316,8 @@ write.table(known.znfs.updated,
             "intermediate-files/standardized-znf-sequences-step7.tsv",
             row.names=F, quote=F, sep="\t", col.names=F)
 ```
+
+---
 
 ## Step 8. Compare accession sequences with publication sequences and update allele list
 ```
