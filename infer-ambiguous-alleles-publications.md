@@ -1,7 +1,9 @@
 # Infer _PRDM9_ allele sequencess mentioned in publications not explicitly defined in publications or GenBank
 A handful of alleles were only decribed in publications in terms of amino acid sequences for the znfs, or as 3-4 amino acids per znf that bind DNA. The following sequences were not able to be inferred due to amino acid ambiguity:
 - Parvanov alleles A3-A10, CH1-CH3
+    - Full amino acid sequences for each znf
 - Kong alleles Decode01-Decode07, YRI01-YRI09
+    - `-1`, `3`, `6` amino acids for znfs `f` and `i` are the same
 
 Allele K from Baudat, however was inferred and confirmed via last author de Massey.
 
