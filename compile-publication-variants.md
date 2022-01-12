@@ -96,8 +96,9 @@ allele.znfs <- pub.allele.znfs %>%
                         mutate(Publication="Jeffreys.2013"))) %>%
     group_by(Publication, AlleleName) %>%
     summarize(StandardZnfContent=str_c(StandardName, collapse="_")) %>%
-  # remove ponting.2011 allele L24 since it is incorrect
-  filter(!(Publication=="Ponting.2011" & AlleleName=="L24")) %>%
+  # remove Ponting.2011 allele L24 and Borel.2012 allele I since they are incorrect
+  filter(!(Publication=="Ponting.2011" & AlleleName=="L24"),
+         !(Publication=="Borel.2012" & AlleleName=="I")) %>%
   pivot_wider(names_from=Publication, values_from=AlleleName) %>%
   # sort in publication order
   arrange(Berg.2010, Berg.2011, Ponting.2011, Borel.2012, Jeffreys.2013, Hussin.2013, Alleva.2021) %>%

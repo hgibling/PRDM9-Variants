@@ -79,7 +79,7 @@ baudat.pub %>%
 # 3 K      -NHR                15
 
 # in three places
-# confirmed with de Massy (lead author) that sequence is most likely z006 (f) at positions 11 and 14 and z009 (i) at position 15
+# confirmed with de Massy (last author) that sequence is most likely z006 (f) at positions 11 and 14 and z009 (i) at position 15
 
 # correct sequence for allele K and add to list of alleles
 updated.allele.znf.content <- pub.genbank.allele.znf.seqs %>%

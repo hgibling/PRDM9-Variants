@@ -328,6 +328,9 @@ cut -f2 intermediate-files/borel-2012-znf-sequences.tsv | sort | uniq | wc -l
 
 **Allele znf content**:
 - Includes alleles `A`-`F`, `I`, `L1`, `L19`, `L28`-`L31`
+  - Cites Berg et al. 2010 for allele znf content and mentions Baudat et al. 2010 in paper
+  - **However, znf content for allele I _does not_ match that for Baudat et al. 2010**
+  - Have reached out to last author for clarification, but assuming it is a typo
 - Copy/paste from **Supplementary Table S1** to: `copy-paste-files/borel-2012-allele-copy.txt`
 - Tidy file: `intermediate-files/borel-2012-allele-znf-content.tsv`
 ```
