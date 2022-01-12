@@ -1,9 +1,9 @@
 # Infer _PRDM9_ allele sequencess mentioned in publications not explicitly defined in publications or GenBank
-A handful of alleles decribed in publications via amino acid sequences or unnamed znf blocks might still be able to be inferred. Try to infer these alleles given amino acid sequences or binding amino acids in znf blocks.
+A handful of alleles were only decribed in publications in terms of amino acid sequences for the znfs, or as 3-4 amino acids per znf that bind DNA. The following sequences were not able to be inferred due to amino acid ambiguity:
+- Parvanov alleles A3-A10, CH1-CH3
+- Kong alleles Decode01-Decode07, YRI01-YRI09
 
-Outline of analysis process:
-- Determine which alleles are not yet in my list
-- Infer via amino acid information, etc.
+Allele K from Baudat, however was inferred and confirmed via last author de Massey.
 
 ## Step 9. Confirm Baudat figure matches GenBank allele seqeunces and infer znf content of allele K
 Baudat depicted alleles A-F, H,I, and K in their publication figure without proper names for znfs. See if color blocks match znfs from GenBank sequences.
@@ -101,9 +101,3 @@ write.table(updated.allele.znf.content,
             "intermediate-files/standardized-allele-znf-content-map-step9.tsv",
             row.names=F, quote=F, sep="\t")
 ```
-
-## Step 10. Infer znf content of Parvanov alleles A3-A10 and CH1-CH3
-
-
-
-## Step 11. Infer znf content of Kong alleles Decode01-Decode12
