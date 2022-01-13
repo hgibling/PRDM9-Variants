@@ -121,8 +121,9 @@ genbank.seqs <- read.table("genbank-records/PRDM9-complete-record-standardized-s
                            header=F, col.names=c("Accession", "ZnfContent"))
 pub.accessions <- read.table("genbank-records/publication-accessions.txt", 
                              header=F, col.names=c("Publication", "Accession"))
-known.znfs <- read.table("intermediate-files/standardized-znf-sequences-step2.tsv",
-                         header=F, col.names=c("StandardZnfName", "Sequence"))
+known.znfs <- read.table("intermediate-files/standardized-znf-sequences-map-step2.tsv",
+                         header=T)
+
 
 # look into alleles with some unknown znfs
 genbank.partial <- genbank.seqs %>%
@@ -188,6 +189,8 @@ aa.codons <- data.frame(
 
 # convert known znf DNA sequences to amino sequences
 known.znf.aminos <- known.znfs %>%
+  select(StandardName, Sequence) %>%
+  rename(StandardZnfName=StandardName) %>%
   # split into codons
   mutate(Sequence=gsub("(.{3})", "\\1_\\2", Sequence)) %>%
   mutate(Sequence=sub("_$", "", Sequence)) %>%
@@ -278,11 +281,15 @@ genbank.partial.fixed <- genbank.partial %>%
 
 # create temp standard names for novel znfs
 known.znfs.updated <- known.znfs %>%
-  bind_rows(genbank.partial.fixed %>%
+  rename(StandardZnfName=StandardName) %>%
+  full_join(genbank.partial.fixed %>%
               filter(grepl("[ACGT]", ZnfContent)) %>%
               ungroup() %>%
-              select(ZnfContent) %>%
-              rename(Sequence=ZnfContent)) %>%
+              select(ZnfContent, Accession) %>%
+              rename(Sequence=ZnfContent, GenBank.2021=Accession) %>%
+              # remove duplicate znf sequences
+              filter(!duplicated(Sequence)) %>%
+              mutate(GenBank.2021=paste(GenBank.2021, "znf", sep="_"))) %>%
   distinct() %>%
   mutate(StandardZnfName=ifelse(is.na(StandardZnfName),
                                 paste0("z", str_pad(row_number(), 3, pad="0")),
@@ -313,8 +320,13 @@ write.table(genbank.seqs.updated,
 
 # update list of znfs
 write.table(known.znfs.updated, 
+            "intermediate-files/standardized-znf-sequences-map-step7.tsv",
+            row.names=F, quote=F, sep="\t", col.names=T)
+
+write.table(known.znfs.updated %>% select(StandardZnfName, Sequence), 
             "intermediate-files/standardized-znf-sequences-step7.tsv",
             row.names=F, quote=F, sep="\t", col.names=F)
+
 ```
 
 ---
