@@ -99,14 +99,36 @@ alleles.with.pop.status.final <- alleles.with.pop.status %>%
 
 # save to file
 write.table(alleles.with.pop.status.final, 
+            "standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-znf-content-map.tsv",
+            row.names=F, quote=F, col.names=T, sep="\t")
+write.table(alleles.with.pop.status.final %>% 
+              select(StandardName, StandardZnfContent), 
+            "standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-znf-content.tsv",
+            row.names=F, quote=F, col.names=F, sep="\t")
+write.table(znfs.with.pop.status, "standardized-lists/population-and-sperm-somatic-PRDM9-standardized-znf-sequences-map.tsv",
+            row.names=F, quote=F, col.names=T, sep="\t")
+write.table(znfs.with.pop.status %>% 
+              select(StandardZnfName, Sequence),
+            "standardized-lists/population-and-sperm-somatic-PRDM9-standardized-znf-sequences.tsv",
+            row.names=F, quote=F, col.names=F, sep="\t")
+
+# just alleles/znfs found in pop
+write.table(alleles.with.pop.status.final %>% 
+              filter(InPopulation==T), 
             "standardized-lists/PRDM9-standardized-allele-znf-content-map.tsv",
-            row.names=F, quote=F, col.names=T)
-write.table(alleles.with.pop.status.final %>% select(StandardName, StandardZnfContent), 
+            row.names=F, quote=F, col.names=T, sep="\t")
+write.table(alleles.with.pop.status.final %>% 
+              filter(InPopulation==T) %>% 
+              select(StandardName, StandardZnfContent), 
             "standardized-lists/PRDM9-standardized-allele-znf-content.tsv",
-            row.names=F, quote=F, col.names=F)
-write.table(znfs.with.pop.status, "standardized-lists/PRDM9-standardized-znf-sequences-map.tsv",
-            row.names=F, quote=F, col.names=T)
-write.table(znfs.with.pop.status %>% select(StandardZnfName, Sequence),
+            row.names=F, quote=F, col.names=F, sep="\t")
+write.table(znfs.with.pop.status  %>% 
+              filter(InPopulation==T), 
+            "standardized-lists/PRDM9-standardized-znf-sequences-map.tsv",
+            row.names=F, quote=F, col.names=T, sep="\t")
+write.table(znfs.with.pop.status  %>% 
+              filter(InPopulation==T) %>% 
+              select(StandardZnfName, Sequence),
             "standardized-lists/PRDM9-standardized-znf-sequences.tsv",
-            row.names=F, quote=F, col.names=F)
+            row.names=F, quote=F, col.names=F, sep="\t")
 ```
