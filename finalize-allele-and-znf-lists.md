@@ -132,3 +132,38 @@ write.table(znfs.with.pop.status  %>%
             "standardized-lists/PRDM9-standardized-znf-sequences.tsv",
             row.names=F, quote=F, col.names=F, sep="\t")
 ```
+
+## Step 11. Regenerate allele sequences from znf sequences
+Replace standard znf names with znf sequences to get full allele sequences for newly organized alleles
+```
+cp standardized-lists/PRDM9-standardized-allele-znf-content.tsv standardized-lists/PRDM9-standardized-allele-sequences.tsv
+
+while read ZNF SEQUENCE
+do
+sed -i '' "s/$ZNF/$SEQUENCE/g" standardized-lists/PRDM9-standardized-allele-sequences.tsv
+done < standardized-lists/PRDM9-standardized-znf-sequences.tsv
+
+# check if any znfs left
+grep "Z" standardized-lists/PRDM9-standardized-allele-sequences.tsv
+# no
+
+# remove _ between znfs
+sed -i '' -e 's/_//g' standardized-lists/PRDM9-standardized-allele-sequences.tsv
+```
+
+Repeat for all alleles (including those only found in sperm/somatic blood)
+```
+cp standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-znf-content.tsv standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-sequences.tsv
+
+while read ZNF SEQUENCE
+do
+sed -i '' "s/$ZNF/$SEQUENCE/g" standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-sequences.tsv
+done < standardized-lists/population-and-sperm-somatic-PRDM9-standardized-znf-sequences.tsv
+
+# check if any znfs left
+grep "Z" standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-sequences.tsv
+# no
+
+# remove _ between znfs
+sed -i '' -e 's/_//g' standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-sequences.tsv
+```
