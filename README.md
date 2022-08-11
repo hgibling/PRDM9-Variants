@@ -14,3 +14,6 @@ Document all known/described PRDM9 allele and zinc finger variants with standard
   - Identify known znfs in new sequences
   - Isolate new znf sequences
     - Confirm new znfs not misprints/truncated known znfs
+
+### TODO
+- Add ref https://onlinelibrary.wiley.com/doi/10.1002/mgg3.56 for Genbank alleles L39-L46
