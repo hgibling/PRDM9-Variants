@@ -15,7 +15,7 @@ Variants observed in the population:
 - [Zinc finger content of alleles](standardized-lists/PRDM9-standardized-allele-znf-content-map.tsv)
 - [Zinc finger sequences](standardized-lists/PRDM9-standardized-znf-sequences-map.tsv)
 
-Above lists plus variants observed only in sperm or as somatic mutations in blood (see Jeffreys)
+Above lists plus variants observed only in sperm or as somatic mutations in blood (see [Jeffreys et al.](collect-known-alleles-publications.md#jeffreys-et-al-jan-2013))
 - [Allele sequences blood/sperm](standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-sequences.tsv)
 - [Zinc finger content of alleles blood/sperm](standardized-lists/population-and-sperm-somatic-PRDM9-standardized-allele-znf-content-map.tsv)
 - [Zinc finger sequences blood/sperm](standardized-lists/population-and-sperm-somatic-PRDM9-standardized-znf-sequences-map.tsv)
