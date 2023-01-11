@@ -32,3 +32,4 @@ Above lists plus variants observed only in sperm or as somatic mutations in bloo
 - Add ref https://onlinelibrary.wiley.com/doi/10.1002/mgg3.56 for Genbank alleles L39-L46
 - Add ref https://www.nature.com/articles/srep40031 for undefined allele L50
 - Add note re: Alleva using allele N for Jeffreys Av:s:0053:M1S:A-A
+- Add novel variants from thesis
