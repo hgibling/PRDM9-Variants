@@ -1,4 +1,4 @@
-# *PRDM9* Variants
+# The *PRDM9* Variant Database
 The *PRDM9* fandom is a bit of a mess:
 - There is inconsistency in how alleles are named
 - Different alleles have the same name
